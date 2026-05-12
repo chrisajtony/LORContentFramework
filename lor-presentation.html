@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>League of Rock — The Social Media Empire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,400;1,600&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Mono&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --bg:    #05040D;
+      --bg2:   #09071A;
+      --bg3:   #0E0B24;
+      --bg4:   #141030;
+      --bg5:   #1B163E;
+      --text:  #F0EBE0;
+      --dim:   #8877AA;
+      --dimmer:#4A3A6A;
+      --gold:  #C9A14A;
+      --gold2: #F0C050;
+      --amber: #E8892A;
+      --pur:   #7B5CE8;
+      --pur2:  #9D7FFF;
+      --blue:  #3B7FFF;
+      --blue2: #60A5FA;
+      --cyan:  #00C2E0;
+      --bord:  rgba(123,92,232,.14);
+      --bord2: rgba(201,161,74,.14);
+    }
+
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+    /* GRAIN */
+    body::before{
+      content:'';position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:.022;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* PROGRESS BAR */
+    #prog{position:fixed;top:0;left:0;height:2px;z-index:1001;width:0;
+      background:linear-gradient(90deg,var(--pur),var(--blue),var(--gold))}
+
+    /* NAV */
+    nav{
+      position:fixed;top:0;left:0;right:0;z-index:100;
+      padding:20px 60px;display:flex;align-items:center;justify-content:space-between;
+      background:linear-gradient(to bottom,rgba(5,4,13,.96),transparent);
+    }
+    .nav-l{display:flex;align-items:center;gap:12px}
+    .nav-l img{width:36px;height:36px;object-fit:contain}
+    .nav-l span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+    nav ul{display:flex;gap:32px;list-style:none}
+    nav ul a{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dimmer);text-decoration:none;transition:color .2s}
+    nav ul a:hover{color:var(--gold)}
+
+    .wrap{max-width:1260px;margin:0 auto;padding:0 60px}
+
+    /* ─────────────────────────────────────────────
+       SHARED TYPOGRAPHY
+    ───────────────────────────────────────────── */
+    .eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.45em;text-transform:uppercase;margin-bottom:14px;display:block}
+    .eyebrow.gold{color:var(--gold)}
+    .eyebrow.pur{color:var(--pur2)}
+    .eyebrow.blue{color:var(--blue2)}
+    .h1{font-family:'Barlow Condensed',sans-serif;font-size:clamp(52px,7.5vw,96px);font-weight:800;line-height:.96;letter-spacing:-.005em;margin-bottom:22px;text-transform:uppercase}
+    .h2{font-family:'Barlow Condensed',sans-serif;font-size:clamp(38px,5vw,68px);font-weight:800;line-height:1;letter-spacing:-.005em;margin-bottom:20px;text-transform:uppercase}
+    .body{font-size:17px;line-height:1.8;color:var(--dim);max-width:580px}
+    .sec-top{margin-bottom:72px}
+
+    /* ─────────────────────────────────────────────
+       SECTION DIVIDERS
+    ───────────────────────────────────────────── */
+    .sec-div{height:1px;background:linear-gradient(90deg,transparent,var(--bord),transparent);margin:0}
+
+    /* ─────────────────────────────────────────────
+       HERO (SLIDE 1)
+    ───────────────────────────────────────────── */
+    #hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+    .hero-glow{
+      position:absolute;inset:0;pointer-events:none;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%,rgba(123,92,232,.2) 0%,transparent 60%),
+        radial-gradient(ellipse 50% 40% at 20% 80%,rgba(59,127,255,.12) 0%,transparent 50%),
+        radial-gradient(ellipse 60% 50% at 80% 20%,rgba(201,161,74,.1) 0%,transparent 50%);
+    }
+    /* Animated particles */
+    .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+    .particle{
+      position:absolute;border-radius:50%;
+      animation:float var(--dur,8s) ease-in-out infinite;
+      animation-delay:var(--del,0s);
+      opacity:.35;
+    }
+    @keyframes float{
+      0%,100%{transform:translate(0,0)}
+      33%{transform:translate(var(--dx,20px),var(--dy,-30px))}
+      66%{transform:translate(var(--dx2,-15px),var(--dy2,20px))}
+    }
+    .hero-inner{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center}
+    /* hero-logo defined below with enhancements */
+    .hero-super{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.5em;color:var(--pur2);text-transform:uppercase;margin-bottom:20px;opacity:0;animation:fadeUp .8s ease .9s forwards}
+    .hero-title{
+      font-family:'Barlow Condensed',sans-serif;font-size:clamp(68px,12vw,148px);font-weight:900;
+      line-height:.9;letter-spacing:.01em;margin-bottom:8px;text-transform:uppercase;
+      opacity:0;animation:fadeUp .9s ease 1.1s forwards;
+    }
+    .hero-title .t1{display:block;color:var(--text)}
+    .hero-title .t2{display:block;color:var(--text)}
+    .hero-title .t3{
+      display:block;
+      background:linear-gradient(135deg,var(--amber) 0%,var(--gold2) 50%,var(--gold) 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .hero-rule{display:flex;align-items:center;gap:16px;margin:28px 0 20px;opacity:0;animation:fadeUp .8s ease 1.3s forwards}
+    .hero-rule::before,.hero-rule::after{content:'';width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--pur))}
+    .hero-rule::after{background:linear-gradient(90deg,var(--pur),transparent)}
+    .hero-rule span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.4em;color:var(--pur2);text-transform:uppercase}
+    .hero-tag{font-size:18px;color:var(--dim);font-family:'DM Sans',sans-serif;max-width:580px;line-height:1.7;opacity:0;animation:fadeUp .8s ease 1.4s forwards}
+    .hero-cta{
+      margin-top:44px;display:inline-flex;align-items:center;gap:12px;
+      font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;
+      color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--amber));
+      padding:14px 32px;text-decoration:none;border:none;cursor:pointer;
+      transition:opacity .2s,transform .2s;opacity:0;animation:fadeUp .8s ease 1.6s forwards;
+    }
+    .hero-cta:hover{opacity:.9;transform:translateY(-1px)}
+    .scroll-ind{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0;animation:fadeUp .8s ease 2s forwards}
+    .scroll-ind span{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.3em;color:var(--dimmer);text-transform:uppercase}
+    .scroll-rod{width:1px;height:42px;background:linear-gradient(to bottom,var(--pur),transparent);animation:rodPulse 2s ease-in-out infinite}
+
+    /* ─────────────────────────────────────────────
+       OPPORTUNITY (SLIDE 2)
+    ───────────────────────────────────────────── */
+    #opportunity{padding:130px 0;background:var(--bg2);position:relative;overflow:hidden}
+    #opportunity::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 80% 50%,rgba(59,127,255,.07) 0%,transparent 60%)}
+    .opp-split{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-bottom:80px}
+    .opp-moment{position:relative}
+    .opp-word{font-family:'Barlow Condensed',sans-serif;font-weight:900;display:block;text-transform:uppercase}
+    .opp-word.w-moment{
+      font-size:clamp(80px,12vw,176px);color:rgba(255,255,255,.12);letter-spacing:.02em;line-height:.88;margin-bottom:4px;
+      clip-path:inset(0 100% 0 0);
+      transition:clip-path 1.1s cubic-bezier(.22,1,.36,1);
+    }
+    .opp-word.w-vs{font-family:'Space Mono',monospace;font-size:13px;letter-spacing:.3em;color:var(--dimmer);margin:20px 0;display:block;opacity:0;transition:opacity .6s .6s ease}
+    .opp-word.w-asset{
+      font-size:clamp(80px,12vw,176px);
+      background:linear-gradient(135deg,var(--gold),var(--amber),var(--gold2));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      letter-spacing:.02em;line-height:.88;
+      clip-path:inset(0 0 0 100%);
+      transition:clip-path 1.1s .2s cubic-bezier(.22,1,.36,1);
+      text-shadow:none;
+    }
+    /* Trigger clip animations when parent .r element gets .vis */
+    .opp-moment.vis .opp-word.w-moment{clip-path:inset(0 0 0 0)}
+    .opp-moment.vis .opp-word.w-vs{opacity:1}
+    .opp-moment.vis .opp-word.w-asset{clip-path:inset(0 0 0 0)}
+    .opp-right .body{margin-bottom:32px;max-width:100%}
+    .fp-cards{display:flex;flex-direction:column;gap:16px}
+    .fp-card{background:var(--bg3);border:1px solid var(--bord);padding:22px 24px;display:flex;gap:20px;align-items:flex-start;transition:border-color .3s}
+    .fp-card:hover{border-color:rgba(123,92,232,.3)}
+    .fp-num{font-family:'Space Mono',monospace;font-size:22px;color:var(--gold);font-weight:400;flex-shrink:0;width:32px}
+    .fp-card h4{font-size:15px;font-weight:600;margin-bottom:5px;color:var(--text)}
+    .fp-card p{font-size:15px;color:var(--dim);line-height:1.7}
+
+    /* ─────────────────────────────────────────────
+       THESIS (SLIDE 3)
+    ───────────────────────────────────────────── */
+    #thesis{padding:130px 0;background:var(--bg);overflow:hidden;position:relative}
+    #thesis::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 70% at 10% 50%,rgba(123,92,232,.08) 0%,transparent 60%)}
+    .thesis-quote{
+      font-family:'DM Sans',sans-serif;font-size:clamp(20px,2.4vw,30px);
+      font-weight:400;line-height:1.7;text-align:center;max-width:920px;margin:0 auto 80px;
+      position:relative;padding:0 40px;color:var(--text);
+    }
+    .thesis-quote::before,.thesis-quote::after{
+      content:'"';position:absolute;font-size:120px;line-height:1;
+      font-family:'Barlow Condensed',sans-serif;color:var(--pur);opacity:.2;
+    }
+    .thesis-quote::before{top:-20px;left:0}
+    .thesis-quote::after{content:'"';bottom:-60px;right:0}
+    .thesis-quote em{color:var(--gold2);font-style:normal}
+    .pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+    .pcard{background:var(--bg3);padding:48px 36px 44px;position:relative;overflow:hidden;
+      transition:background .4s,transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s}
+    .pcard.r{transition:opacity .7s ease,transform .7s ease,background .4s,box-shadow .45s}
+    .pcard:hover{background:var(--bg4);transform:translateY(-8px);
+      box-shadow:0 32px 72px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.04)}
+    /* top accent bar — scaleX 0→1 on .vis */
+    .pcard::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:var(--pc,var(--gold));transform:scaleX(0);transform-origin:left;
+      transition:transform .75s .1s cubic-bezier(.22,1,.36,1)}
+    .pcard.vis::before{transform:scaleX(1)}
+    /* scan sweep on entry */
+    .pcard::after{content:'';position:absolute;top:-100%;left:0;right:0;height:100%;
+      background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,.04) 50%,transparent 100%);
+      transition:top .8s .15s cubic-bezier(.22,1,.36,1);pointer-events:none}
+    .pcard.vis::after{top:100%}
+    /* number */
+    .pcard-n{font-family:'Space Mono',monospace;font-size:80px;font-weight:700;
+      color:rgba(255,255,255,.6);line-height:1;margin-bottom:20px;
+      text-shadow:0 0 40px var(--pc,var(--gold));
+      opacity:0;transform:translateX(-16px);
+      transition:opacity .55s .2s,transform .55s .2s cubic-bezier(.22,1,.36,1),
+                 color .4s,text-shadow .4s}
+    .pcard.vis .pcard-n{opacity:1;transform:translateX(0)}
+    .pcard:hover .pcard-n{color:#fff;text-shadow:0 0 18px var(--pc,var(--gold)),0 0 50px var(--pc,var(--gold))}
+    .pcard-t{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;
+      margin-bottom:10px;text-transform:uppercase;letter-spacing:.02em;
+      opacity:0;transform:translateY(10px);
+      transition:opacity .55s .32s,transform .55s .32s cubic-bezier(.22,1,.36,1)}
+    .pcard.vis .pcard-t{opacity:1;transform:translateY(0)}
+    .pcard-b{font-size:15px;line-height:1.75;color:var(--dim);
+      opacity:0;transform:translateY(10px);
+      transition:opacity .55s .44s,transform .55s .44s cubic-bezier(.22,1,.36,1)}
+    .pcard.vis .pcard-b{opacity:1;transform:translateY(0)}
+
+    /* ─────────────────────────────────────────────
+       MARKET STATS (SLIDE 4)
+    ───────────────────────────────────────────── */
+    #market{padding:130px 0;background:var(--bg2);overflow:hidden;position:relative}
+    #market::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(123,92,232,.12) 0%,transparent 65%)}
+    .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;margin-top:72px}
+    .stat-card{
+      background:var(--bg3);padding:52px 44px;position:relative;overflow:hidden;
+      border:1px solid var(--bord);transition:border-color .3s;
+    }
+    .stat-card:hover{border-color:rgba(123,92,232,.3)}
+    .stat-card::after{
+      content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:linear-gradient(90deg,var(--sc,var(--gold)),transparent);
+    }
+    .stat-num{
+      font-family:'Barlow Condensed',sans-serif;font-size:clamp(64px,8vw,104px);font-weight:900;
+      line-height:1;margin-bottom:12px;
+      color:#ffffff;
+      text-shadow:0 0 40px var(--sc,var(--gold)),0 0 80px rgba(201,161,74,.3);
+    }
+    .stat-label{font-size:16px;font-weight:600;margin-bottom:8px;color:var(--text)}
+    .stat-desc{font-size:15px;color:var(--dim);line-height:1.7}
+    .stat-source{margin-top:14px;font-family:'Space Mono',monospace;font-size:10px;color:var(--dimmer);letter-spacing:.1em}
+
+    /* ─────────────────────────────────────────────
+       OBJECTIVES (SLIDES 5+6)
+    ───────────────────────────────────────────── */
+    #objectives{padding:130px 0;background:var(--bg)}
+    .obj-tabs{display:flex;gap:0;margin-bottom:56px;border-bottom:1px solid var(--bord)}
+    .obj-tab{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;padding:12px 28px;cursor:pointer;color:var(--dimmer);border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .2s,border-color .2s}
+    .obj-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+    .obj-panel{display:none}.obj-panel.active{display:block}
+    .obj-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+    .obj-card{background:var(--bg3);border:1px solid var(--bord);padding:34px 30px;transition:border-color .3s,background .3s}
+    .obj-card:hover{border-color:rgba(123,92,232,.3);background:var(--bg4)}
+    .obj-num{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.3em;padding:4px 10px;border:1px solid var(--oc,var(--gold));color:var(--oc,var(--gold));display:inline-block;margin-bottom:16px}
+    .obj-card h3{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;margin-bottom:10px}
+    .obj-card p{font-size:13px;line-height:1.75;color:var(--dim)}
+
+    /* ─────────────────────────────────────────────
+       FRAMEWORK (SLIDE 7)
+    ───────────────────────────────────────────── */
+    #framework{padding:130px 0;background:var(--bg2);position:relative;overflow:hidden}
+    #framework::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 40%,rgba(59,127,255,.06) 0%,transparent 60%)}
+    .layers{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:72px;position:relative}
+    /* animated flow line between layers */
+    .layers-flow{display:flex;justify-content:center;margin-top:32px;align-items:center;gap:0}
+    .flow-text{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;text-align:center;margin:0 16px;flex:1}
+    .flow-arrow{width:80px;height:1px;background:linear-gradient(90deg,var(--bord) 0%,var(--pur) 50%,var(--bord) 100%);position:relative;flex-shrink:0}
+    .flow-arrow::after{content:'▶';position:absolute;right:-6px;top:50%;transform:translateY(-50%);font-size:8px;color:var(--pur)}
+    .layer-col{
+      background:var(--bg3);padding:40px 30px;position:relative;overflow:hidden;
+      border:1px solid var(--bord);transition:border-color .3s;
+    }
+    .layer-col:hover{border-color:rgba(123,92,232,.3)}
+    .layer-col::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--lc,var(--pur))}
+    .layer-num{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;margin-bottom:6px}
+    .layer-name{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;margin-bottom:4px;text-transform:uppercase;letter-spacing:.02em}
+    .layer-role{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--bord)}
+    .layer-plat{font-size:13px;color:var(--text);font-weight:500;margin-bottom:12px}
+    .layer-body{font-size:15px;line-height:1.75;color:var(--dim)}
+    .layer-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px}
+    .layer-tag{font-size:11px;padding:4px 10px;border:1px solid var(--bord);color:var(--dim);background:var(--bg4)}
+
+    /* ─────────────────────────────────────────────
+       CONTENT PILLARS (SLIDE 8)
+    ───────────────────────────────────────────── */
+    #pillars{padding:130px 0;background:var(--bg)}
+    .pillar-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}
+    .pillar{background:var(--bg3);padding:38px 30px;position:relative;overflow:hidden;transition:background .3s}
+    .pillar:hover{background:var(--bg4)}
+    .pillar::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--pc,var(--gold));transform:scaleX(0);transform-origin:left;transition:transform .35s}
+    .pillar:hover::before{transform:scaleX(1)}
+    .pillar-icon{font-size:32px;margin-bottom:18px;display:block;filter:drop-shadow(0 0 8px var(--pc,var(--gold)))}
+    .pillar-n{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.35em;text-transform:uppercase;color:var(--pc,var(--gold));margin-bottom:10px}
+    .pillar-t{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;margin-bottom:10px;line-height:1.1;text-transform:uppercase;letter-spacing:.02em}
+    .pillar-b{font-size:15px;line-height:1.75;color:var(--dim)}
+
+    /* ─────────────────────────────────────────────
+       FUNNEL (SLIDE 9)
+    ───────────────────────────────────────────── */
+    #funnel{padding:130px 0;background:var(--bg2);position:relative;overflow:hidden}
+    #funnel::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(201,161,74,.07) 0%,transparent 60%)}
+    /* pipeline bar draws left→right */
+    .funnel-vis{display:grid;grid-template-columns:repeat(6,1fr);gap:0;margin-top:72px;position:relative}
+    .funnel-vis::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:4;
+      background:linear-gradient(90deg,var(--pur2) 0%,var(--blue2) 30%,var(--pur) 55%,var(--amber) 78%,var(--gold) 100%);
+      transform:scaleX(0);transform-origin:left;
+      transition:transform 1.4s .1s cubic-bezier(.22,1,.36,1)}
+    .funnel-vis.f-go::before{transform:scaleX(1)}
+    /* card base */
+    .f-card{background:var(--bg3);padding:56px 24px 52px;text-align:center;position:relative;
+      z-index:1;border-right:1px solid rgba(255,255,255,.05);overflow:hidden;cursor:default;
+      opacity:0;transform:translateY(32px);
+      transition:opacity .6s,transform .65s cubic-bezier(.22,1,.36,1),background .5s,box-shadow .5s}
+    .f-card:last-child{border-right:none}
+    .f-card.f-in{opacity:1;transform:translateY(0)}
+    .f-card.lit{background:rgba(255,255,255,.035)}
+    /* bottom glow bar */
+    .f-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:3px;
+      background:var(--fc,var(--gold));box-shadow:0 0 14px var(--fc,var(--gold));
+      transition:width .7s .1s cubic-bezier(.22,1,.36,1)}
+    .f-card.lit::after{width:100%}
+    /* ghost number */
+    .f-bg-n{position:absolute;bottom:-16px;right:-6px;
+      font-family:'Barlow Condensed',sans-serif;font-size:180px;font-weight:900;line-height:1;
+      color:rgba(255,255,255,.022);pointer-events:none;user-select:none;transition:color .5s}
+    .f-card.lit .f-bg-n{color:rgba(255,255,255,.055)}
+    /* large step number */
+    .f-num{font-family:'Space Mono',monospace;font-size:56px;font-weight:700;line-height:1;
+      margin-bottom:20px;color:rgba(255,255,255,.18);text-shadow:none;
+      transition:color .5s .05s,text-shadow .5s .05s}
+    .f-card.lit .f-num{color:rgba(255,255,255,.95);
+      text-shadow:0 0 22px var(--fc,var(--gold)),0 0 56px var(--fc,var(--gold))}
+    /* stage label */
+    .f-stage-n{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.24em;
+      text-transform:uppercase;color:rgba(255,255,255,.22);margin-bottom:16px;transition:color .4s .15s}
+    .f-card.lit .f-stage-n{color:var(--fc,var(--gold))}
+    /* divider line */
+    .f-div{width:24px;height:1px;background:rgba(255,255,255,.12);margin:0 auto 16px;
+      transition:width .5s .25s,background .4s .25s}
+    .f-card.lit .f-div{width:48px;background:var(--fc,var(--gold))}
+    /* title */
+    .f-title{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;
+      margin-bottom:14px;text-transform:uppercase;letter-spacing:.02em;line-height:1.1;
+      opacity:0;transform:translateY(10px);transition:opacity .5s .3s,transform .5s .3s}
+    .f-card.lit .f-title{opacity:1;transform:translateY(0)}
+    /* body */
+    .f-body{font-size:13px;line-height:1.75;color:rgba(255,255,255,.35);
+      opacity:0;transition:opacity .5s .42s,color .3s}
+    .f-card.lit .f-body{opacity:1}
+    .f-card:hover .f-body{color:var(--dim)}
+    .funnel-benchmarks{margin-top:48px;background:var(--bg3);border:1px solid var(--bord);padding:32px 36px;display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .bench-item h4{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+    .bench-item p{font-size:13px;color:var(--dim);line-height:1.6}
+
+    /* ─────────────────────────────────────────────
+       MULTIPLIERS (SLIDE 10)
+    ───────────────────────────────────────────── */
+    #multipliers{padding:130px 0;background:var(--bg);position:relative;overflow:hidden}
+    .mult-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-top:72px}
+    .mult-panel{background:var(--bg3);padding:52px 44px;position:relative;overflow:hidden;border:1px solid var(--bord)}
+    .mult-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--mp,var(--pur))}
+    .mult-panel::after{content:'';position:absolute;bottom:-80px;right:-80px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(var(--mpr,123,92,232),.08) 0%,transparent 70%);pointer-events:none}
+    .mult-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;margin-bottom:10px}
+    .mult-t{font-family:'Barlow Condensed',sans-serif;font-size:34px;font-weight:800;margin-bottom:16px;line-height:1;text-transform:uppercase;letter-spacing:.02em}
+    .mult-hero-stat{
+      font-family:'Barlow Condensed',sans-serif;font-size:clamp(72px,10vw,116px);font-weight:900;
+      line-height:1;margin:24px 0;
+      color:#ffffff;
+      text-shadow:0 0 50px var(--gold),0 0 100px rgba(201,161,74,.4);
+    }
+    .mult-stat-lbl{font-size:15px;color:var(--dim);margin-bottom:24px;font-family:'DM Sans',sans-serif}
+    .mult-body{font-size:15px;line-height:1.75;color:var(--dim);margin-bottom:24px}
+    .mult-list{list-style:none;display:flex;flex-direction:column;gap:10px}
+    .mult-list li{font-size:15px;color:var(--dim);padding-left:18px;position:relative;line-height:1.6}
+    .mult-list li::before{content:'→';position:absolute;left:0;color:var(--gold);font-size:11px;top:2px}
+    .mult-list li strong{color:var(--text)}
+    .cats{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+    .cat{font-size:11px;padding:5px 12px;border:1px solid var(--bord);color:var(--dim);background:var(--bg4)}
+
+    /* ─────────────────────────────────────────────
+       MONETIZATION (SLIDE 11)
+    ───────────────────────────────────────────── */
+    #monetization{padding:130px 0;background:var(--bg2)}
+    .mono-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:72px}
+    .mono-t{background:var(--bg3);border:1px solid var(--bord);border-top:2px solid;padding:36px 28px}
+    .mono-t.t1{border-top-color:var(--gold)}
+    .mono-t.t2{border-top-color:var(--pur)}
+    .mono-t.t3{border-top-color:var(--blue2)}
+    .mono-lbl{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;margin-bottom:6px}
+    .t1 .mono-lbl{color:var(--gold)}.t2 .mono-lbl{color:var(--pur2)}.t3 .mono-lbl{color:var(--blue2)}
+    .mono-h{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;margin-bottom:6px}
+    .mono-sub{font-size:12px;color:var(--dim);margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--bord)}
+    .mono-items{list-style:none;display:flex;flex-direction:column;gap:14px}
+    .mi{display:flex;gap:10px;align-items:flex-start}
+    .mi-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:7px}
+    .t1 .mi-dot{background:var(--gold)}.t2 .mi-dot{background:var(--pur)}.t3 .mi-dot{background:var(--blue2)}
+    .mi h5{font-size:13px;font-weight:600;margin-bottom:2px;color:var(--text)}
+    .mi p{font-size:12px;color:var(--dim);line-height:1.55}
+    /* Animated bar chart */
+    .rev-chart{margin-top:60px}
+    .rev-chart-title{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--dim);margin-bottom:24px}
+    .rev-chart{background:var(--bg3);border:1px solid var(--bord2);padding:56px 60px;margin-top:72px;position:relative;overflow:hidden}
+    .rev-chart::before{content:'';position:absolute;top:-80px;right:-80px;width:440px;height:440px;
+      border-radius:50%;background:radial-gradient(circle,rgba(201,161,74,.05) 0%,transparent 70%);pointer-events:none}
+    .rev-chart-title{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:44px;display:block}
+    .rev-bars{display:flex;flex-direction:column;gap:10px}
+    .rev-bar-row{display:grid;grid-template-columns:210px 1fr 64px;gap:24px;align-items:center;
+      opacity:0;transform:translateX(-24px);
+      transition:opacity .5s,transform .55s cubic-bezier(.22,1,.36,1)}
+    .rev-bar-row.rvis{opacity:1;transform:translateX(0)}
+    .rev-bar-label{font-family:'DM Sans',sans-serif;font-size:15px;color:var(--dim);text-align:right;line-height:1.3}
+    .rev-bar-track{height:48px;background:rgba(255,255,255,.04);position:relative;overflow:hidden}
+    .rev-bar-fill{height:100%;width:0;transition:width 1.6s cubic-bezier(.25,1,.5,1);position:relative;display:flex;align-items:center}
+    /* glowing right tip */
+    .rev-bar-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;
+      background:rgba(255,255,255,.7);box-shadow:0 0 14px rgba(255,255,255,.5),0 0 28px rgba(255,255,255,.2)}
+    .rev-bar-inner{position:absolute;left:16px;top:50%;transform:translateY(-50%);
+      font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:700;
+      color:rgba(255,255,255,.55);white-space:nowrap;letter-spacing:.02em;
+      opacity:0;transition:opacity .3s .8s}
+    .rev-bar-row.rvis .rev-bar-inner{opacity:1}
+    .rev-bar-yr{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;
+      color:rgba(255,255,255,.3);text-align:left;white-space:nowrap}
+
+    /* ─────────────────────────────────────────────
+       KPIs (SLIDE 13)
+    ───────────────────────────────────────────── */
+    #kpis{padding:130px 0;background:var(--bg2);position:relative;overflow:hidden}
+    #kpis::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(123,92,232,.1) 0%,transparent 60%)}
+    /* unified kpi grid */
+    .kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:72px;position:relative}
+    /* pipeline bar */
+    .kpi-grid::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;z-index:4;
+      background:linear-gradient(90deg,var(--pur2),var(--blue2),var(--amber),var(--gold2),var(--gold));
+      transform:scaleX(0);transform-origin:left;
+      transition:transform 1.3s .05s cubic-bezier(.22,1,.36,1)}
+    .kpi-grid.kg-go::before{transform:scaleX(1)}
+    /* card */
+    .kpi-card{background:var(--bg3);padding:48px 28px 44px;position:relative;overflow:hidden;
+      border-right:1px solid rgba(255,255,255,.05);
+      opacity:0;transform:translateY(30px);
+      transition:opacity .65s,transform .7s cubic-bezier(.22,1,.36,1),background .4s,box-shadow .4s}
+    .kpi-card:last-child{border-right:none}
+    .kpi-card.kvis{opacity:1;transform:translateY(0)}
+    .kpi-card:hover{background:var(--bg4);box-shadow:0 20px 50px rgba(0,0,0,.4)}
+    /* ghost */
+    .kpi-ghost{position:absolute;bottom:-16px;right:-6px;
+      font-family:'Barlow Condensed',sans-serif;font-size:130px;font-weight:900;line-height:1;
+      color:rgba(255,255,255,.022);pointer-events:none;user-select:none;transition:color .5s}
+    .kpi-card.kvis .kpi-ghost{color:rgba(255,255,255,.05)}
+    /* bottom fill bar */
+    .kpi-card::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;
+      background:var(--kc,var(--gold));
+      transition:width .9s .3s cubic-bezier(.22,1,.36,1)}
+    .kpi-card.kvis::after{width:100%}
+    /* metric label */
+    .kpi-metric{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.22em;
+      text-transform:uppercase;color:var(--kc,var(--gold));display:block;margin-bottom:18px;
+      opacity:0;transition:opacity .5s .2s}
+    .kpi-card.kvis .kpi-metric{opacity:1}
+    /* big target number */
+    .kpi-big{font-family:'Barlow Condensed',sans-serif;font-size:clamp(42px,4.5vw,66px);
+      font-weight:900;color:#fff;line-height:1;margin-bottom:4px;
+      text-shadow:0 0 28px var(--kc,var(--gold));
+      opacity:0;transform:translateY(14px);
+      transition:opacity .5s .28s,transform .5s .28s cubic-bezier(.22,1,.36,1)}
+    .kpi-card.kvis .kpi-big{opacity:1;transform:translateY(0)}
+    .kpi-card:hover .kpi-big{text-shadow:0 0 20px var(--kc,var(--gold)),0 0 50px var(--kc,var(--gold))}
+    .kpi-sublabel{font-family:'Space Mono',monospace;font-size:8px;color:rgba(255,255,255,.28);
+      margin-bottom:28px;display:block;opacity:0;transition:opacity .5s .36s}
+    .kpi-card.kvis .kpi-sublabel{opacity:1}
+    /* milestone rows */
+    .kpi-milestones{display:flex;flex-direction:column;gap:9px;
+      opacity:0;transition:opacity .5s .44s}
+    .kpi-card.kvis .kpi-milestones{opacity:1}
+    .kpi-mi{display:flex;justify-content:space-between;align-items:center;
+      padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.04)}
+    .kpi-mi:last-child{border-bottom:none;padding-bottom:0}
+    .kpi-mi-t{font-family:'Space Mono',monospace;font-size:8px;letter-spacing:.15em;
+      color:rgba(255,255,255,.25);text-transform:uppercase}
+    .kpi-mi-v{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;
+      color:rgba(255,255,255,.55)}
+    .kpi-mi.final .kpi-mi-v{color:var(--kc,var(--gold));
+      text-shadow:0 0 12px var(--kc,var(--gold))}
+    /* progress bar */
+    .kpi-seg-wrap{margin-top:20px;opacity:0;transition:opacity .5s .52s}
+    .kpi-card.kvis .kpi-seg-wrap{opacity:1}
+    .kpi-seg-track{height:3px;background:rgba(255,255,255,.07);overflow:hidden}
+    .kpi-seg-fill{height:100%;width:0;
+      background:linear-gradient(90deg,rgba(255,255,255,.25),var(--kc,var(--gold)));
+      transition:width 1.8s .55s cubic-bezier(.25,1,.5,1)}
+    .kpi-card.kvis .kpi-seg-fill{width:var(--fw,100%)}
+    /* north-star */
+    .rpam-box{margin-top:2px;background:var(--bg3);border-top:3px solid var(--gold);
+      padding:52px 60px;display:grid;grid-template-columns:1fr 2fr;gap:48px;align-items:center}
+    .rpam-box .rpam-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;
+      text-transform:uppercase;color:var(--gold);margin-bottom:12px;display:block}
+    .rpam-box h3{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,3vw,42px);
+      font-weight:800;text-transform:uppercase;letter-spacing:.02em;line-height:1.1}
+    .rpam-box p{font-size:15px;color:var(--dim);line-height:1.8}
+
+    /* ─────────────────────────────────────────────
+       THE CLOSE (SLIDE 14)
+    ───────────────────────────────────────────── */
+    #close{padding:160px 0;background:var(--bg);text-align:center;position:relative;overflow:hidden}
+    .close-glow{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(ellipse 60% 60% at 50% 50%,rgba(123,92,232,.15) 0%,transparent 65%),
+        radial-gradient(ellipse 40% 30% at 50% 50%,rgba(201,161,74,.08) 0%,transparent 50%);
+    }
+    .close-inner{position:relative;z-index:1}
+    .close-pre{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(--dim);margin-bottom:28px;display:block}
+    .close-h{font-family:'Barlow Condensed',sans-serif;font-size:clamp(36px,5.5vw,68px);font-weight:700;line-height:1.1;margin-bottom:24px}
+    /* cycling line */
+    .close-cycle{display:block;position:relative;font-size:clamp(22px,2.6vw,36px);height:1.2em;overflow:hidden;margin-top:.12em}
+    .close-slide{
+      display:block;position:absolute;left:0;right:0;
+      white-space:nowrap;
+      transform:translateY(110%);opacity:0;
+      transition:transform 1.15s cubic-bezier(.22,1,.36,1),opacity .9s ease;
+      will-change:transform,opacity;
+    }
+    .close-slide.active{transform:translateY(0);opacity:1}
+    .close-slide.exit{transform:translateY(-110%);opacity:0}
+    .close-body{font-size:19px;color:var(--dim);line-height:1.8;max-width:660px;margin:0 auto 72px;font-family:'DM Sans',sans-serif;}
+    .close-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;text-align:left;margin-bottom:80px}
+    .cp{background:var(--bg3);padding:52px 40px 48px;position:relative;overflow:hidden;
+      transition:background .4s,transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s}
+    .cp.r{transition:opacity .7s ease,transform .7s ease,background .4s,box-shadow .45s}
+    .cp:hover{background:var(--bg4);transform:translateY(-6px);
+      box-shadow:0 28px 60px rgba(0,0,0,.5)}
+    /* top accent bar */
+    .cp::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+      background:var(--cc,var(--gold));transform:scaleX(0);transform-origin:left;
+      transition:transform .75s .1s cubic-bezier(.22,1,.36,1)}
+    .cp.vis::before{transform:scaleX(1)}
+    /* bottom fill bar */
+    .cp::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;
+      background:var(--cc,var(--gold));opacity:.4;
+      transition:width .8s .2s cubic-bezier(.22,1,.36,1)}
+    .cp.vis::after{width:100%}
+    /* ghost number */
+    .cp-n{font-family:'Barlow Condensed',sans-serif;font-size:160px;font-weight:900;
+      position:absolute;bottom:-20px;right:-8px;line-height:1;
+      color:rgba(255,255,255,.025);pointer-events:none;user-select:none;
+      transition:color .5s}
+    .cp.vis .cp-n{color:rgba(255,255,255,.05)}
+    .cp:hover .cp-n{color:rgba(255,255,255,.08)}
+    /* step label */
+    .cp-step{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.25em;
+      text-transform:uppercase;color:var(--cc,var(--gold));margin-bottom:24px;display:block;
+      opacity:0;transform:translateX(-12px);
+      transition:opacity .5s .15s,transform .5s .15s cubic-bezier(.22,1,.36,1)}
+    .cp.vis .cp-step{opacity:1;transform:translateX(0)}
+    /* divider */
+    .cp-div{width:0;height:1px;background:var(--cc,var(--gold));opacity:.4;
+      margin-bottom:20px;transition:width .5s .28s cubic-bezier(.22,1,.36,1)}
+    .cp.vis .cp-div{width:36px}
+    .cp h3{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:800;
+      text-transform:uppercase;letter-spacing:.02em;line-height:1.15;
+      margin-bottom:14px;
+      opacity:0;transform:translateY(10px);
+      transition:opacity .5s .32s,transform .5s .32s cubic-bezier(.22,1,.36,1)}
+    .cp.vis h3{opacity:1;transform:translateY(0)}
+    .cp p{font-size:14px;color:var(--dim);line-height:1.8;
+      opacity:0;transition:opacity .5s .44s}
+    .cp.vis p{opacity:1}
+    .close-cta{
+      font-family:'Barlow Condensed',sans-serif;font-size:clamp(40px,6vw,80px);font-weight:700;
+      letter-spacing:.06em;
+      background:linear-gradient(135deg,var(--amber),var(--gold2),var(--gold));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      margin-top:24px;display:block;
+      animation:ctaPulse 3s ease-in-out infinite;
+    }
+    @keyframes ctaPulse{0%,100%{opacity:1}50%{opacity:.75}}
+
+    /* FOOTER */
+    footer{background:var(--bg2);padding:36px 60px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bord)}
+    .f-brand{display:flex;align-items:center;gap:12px}
+    .f-brand img{width:32px;height:32px;object-fit:contain}
+    .f-brand span{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--dim);text-transform:uppercase}
+    footer .f-note{font-size:12px;color:var(--dimmer)}
+
+    /* ─────────────────────────────────────────────
+       REVEAL ANIMATIONS
+    ───────────────────────────────────────────── */
+    .r{opacity:0;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+    .r.vis{opacity:1;transform:translateY(0)}
+    .d1{transition-delay:.08s}.d2{transition-delay:.16s}.d3{transition-delay:.24s}
+    .d4{transition-delay:.32s}.d5{transition-delay:.4s}
+    .rx{opacity:0;transform:translateX(-16px);transition:opacity .6s ease,transform .6s ease}
+    .rx.vis{opacity:1;transform:translateX(0)}
+
+    @keyframes logoIn{to{opacity:1;transform:scale(1) translateY(0)}}
+    @keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+    @keyframes rodPulse{0%,100%{opacity:.2;transform:scaleY(.8)}50%{opacity:1;transform:scaleY(1)}}
+    @keyframes dotPulse{0%,100%{box-shadow:0 0 8px rgba(201,161,74,.4)}50%{box-shadow:0 0 20px rgba(201,161,74,.8)}}
+    @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+
+    /* ── HERO RINGS ─────────────────────────────── */
+    .hero-rings{position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center}
+    .h-ring{position:absolute;border-radius:50%;border:1px solid;transform:translateY(-40px)}
+    .h-ring:nth-child(1){width:340px;height:340px;border-color:rgba(201,161,74,.25);animation:ringPulse 3.5s ease-in-out infinite}
+    .h-ring:nth-child(2){width:480px;height:480px;border-color:rgba(123,92,232,.15);animation:ringPulse 4.5s ease-in-out 1s infinite}
+    .h-ring:nth-child(3){width:640px;height:640px;border-color:rgba(59,127,255,.08);animation:ringPulse 5.5s ease-in-out 2s infinite}
+    @keyframes ringPulse{
+      0%,100%{opacity:.4;transform:translateY(-40px) scale(1)}
+      50%{opacity:1;transform:translateY(-40px) scale(1.03)}
+    }
+
+    /* ── HERO SCAN ──────────────────────────────── */
+    .hero-scan{
+      position:absolute;left:0;right:0;height:120px;top:-120px;pointer-events:none;
+      background:linear-gradient(to bottom,transparent,rgba(123,92,232,.06) 50%,transparent);
+      animation:scanDown 10s linear infinite 2s;
+    }
+    @keyframes scanDown{0%{top:-120px}100%{top:100%}}
+
+    /* ── HERO GLOW PULSE ────────────────────────── */
+    .hero-glow{animation:glowBreath 5s ease-in-out infinite}
+    @keyframes glowBreath{
+      0%,100%{opacity:1}
+      50%{opacity:.65}
+    }
+
+    /* ── TITLE SHIMMER on Empire ────────────────── */
+    .hero-title .t3{
+      background:linear-gradient(120deg,var(--amber) 0%,var(--gold2) 40%,#fff 50%,var(--gold2) 60%,var(--gold) 100%);
+      background-size:200% auto;
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      animation:titleShimmer 4s linear infinite 2.5s;
+    }
+    @keyframes titleShimmer{
+      0%{background-position:200% center}
+      100%{background-position:-200% center}
+    }
+
+    /* ── LOGO ENHANCED ──────────────────────────── */
+    .hero-logo{
+      width:min(300px,58vw);height:auto;margin-bottom:40px;
+      filter:drop-shadow(0 0 50px rgba(201,161,74,.5)) drop-shadow(0 0 120px rgba(123,92,232,.3));
+      opacity:0;transform:scale(.85) translateY(16px);
+      animation:logoIn 1.4s cubic-bezier(.22,1,.36,1) .2s forwards;
+    }
+
+    /* ─────────────────────────────────────────────
+       OPPORTUNITY BEATS
+    ───────────────────────────────────────────── */
+    .opp-beats{display:flex;flex-direction:column;gap:3px;margin-top:72px}
+    .opp-beat{
+      display:grid;grid-template-columns:100px 1fr;align-items:center;
+      background:var(--bg3);padding:52px 56px;position:relative;overflow:hidden;
+      border:1px solid var(--bord);transition:border-color .3s,background .3s;
+    }
+    .opp-beat:hover{border-color:rgba(123,92,232,.3);background:var(--bg4)}
+    /* Left accent bar — scales in on reveal */
+    .opp-beat::before{
+      content:'';position:absolute;left:0;top:0;bottom:0;width:4px;
+      background:var(--ob,var(--pur));
+      transform:scaleY(0);transform-origin:top;
+      transition:transform 1.2s cubic-bezier(.22,1,.36,1) .35s;
+    }
+    .opp-beat.vis::before{transform:scaleY(1)}
+    /* Bottom fill bar — sweeps right on reveal */
+    .opp-beat-bar{
+      position:absolute;bottom:0;left:0;height:2px;width:0;
+      background:linear-gradient(90deg,var(--ob,var(--pur)),transparent);
+      transition:width 1.8s cubic-bezier(.25,1,.5,1) .5s;
+    }
+    .opp-beat.vis .opp-beat-bar{width:100%}
+    /* Giant ghost number background */
+    .beat-ghost{
+      position:absolute;right:28px;top:50%;transform:translateY(-50%);
+      font-family:'Barlow Condensed',sans-serif;font-size:240px;font-weight:900;
+      line-height:1;color:rgba(255,255,255,.022);pointer-events:none;user-select:none;letter-spacing:.02em;
+    }
+    /* Number on the left */
+    .opp-beat-n{
+      font-family:'Barlow Condensed',sans-serif;font-size:80px;font-weight:900;
+      color:transparent;-webkit-text-stroke:1px rgba(123,92,232,.18);
+      line-height:1;text-align:center;padding-right:12px;
+      transition:-webkit-text-stroke-color .7s .4s ease;
+    }
+    .opp-beat.vis .opp-beat-n{-webkit-text-stroke-color:var(--ob,var(--pur))}
+    /* Content area */
+    .opp-beat-content{border-left:1px solid var(--bord);padding-left:48px}
+    .opp-beat-h{
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:clamp(26px,3vw,44px);font-weight:800;
+      text-transform:uppercase;letter-spacing:.02em;line-height:1.05;
+      margin-bottom:14px;color:var(--text);
+    }
+    .opp-beat-h .hl{color:var(--ob,var(--gold2))}
+    .opp-beat-b{font-size:16px;line-height:1.8;color:var(--dim);max-width:660px}
+
+    /* ─────────────────────────────────────────────
+       MARKET INTELLIGENCE (NEW)
+    ───────────────────────────────────────────── */
+    #market-intel{padding:130px 0;background:var(--bg2);position:relative;overflow:hidden}
+    #market-intel::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 30% 60%,rgba(59,127,255,.07) 0%,transparent 60%)}
+    .mi-layout{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:72px;align-items:start}
+    .platform-list{display:flex;flex-direction:column;gap:12px}
+    .platform-item{background:var(--bg3);border:1px solid var(--bord);padding:22px 26px;display:flex;gap:20px;align-items:flex-start;transition:border-color .3s}
+    .platform-item:hover{border-color:rgba(59,127,255,.3)}
+    .plat-badge{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.2em;padding:5px 9px;border:1px solid;flex-shrink:0;margin-top:2px;text-transform:uppercase}
+    .platform-item h4{font-size:15px;font-weight:600;margin-bottom:4px;color:var(--text)}
+    .platform-item p{font-size:14px;line-height:1.7;color:var(--dim)}
+    .cost-compare{background:var(--bg4);border:1px solid var(--bord2);padding:52px 60px;margin-top:60px;position:relative;overflow:hidden}
+    .cost-compare::before{content:'';position:absolute;bottom:-80px;right:-80px;width:400px;height:400px;
+      border-radius:50%;background:radial-gradient(circle,rgba(201,161,74,.07) 0%,transparent 70%);pointer-events:none}
+    .cost-compare .cc-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:36px;display:block}
+    .cost-rows{display:flex;flex-direction:column;gap:0}
+    .cost-row{display:grid;grid-template-columns:48px 1fr auto;align-items:center;gap:28px;padding:28px 0;border-bottom:1px solid var(--bord)}
+    .cost-row:last-of-type{border-bottom:none;padding-bottom:0}
+    .cost-row-n{font-family:'Space Mono',monospace;font-size:11px;color:rgba(255,255,255,.2);letter-spacing:.1em}
+    .cost-row .cost-type{font-size:18px;color:var(--dim);line-height:1.4}
+    .cost-row .cost-val{font-family:'Barlow Condensed',sans-serif;font-size:clamp(32px,3.2vw,48px);font-weight:800;color:var(--text);text-align:right;white-space:nowrap;letter-spacing:.01em}
+    .cost-row-hero{background:rgba(201,161,74,.04);margin:0 -60px;padding:28px 60px !important;border-bottom:none !important}
+    .cost-row-hero .cost-row-n{color:var(--gold);opacity:.6}
+    .cost-row-hero .cost-type{font-size:20px;color:var(--text)}
+    .cost-row-hero .cost-val{font-size:clamp(56px,6.5vw,88px) !important;color:var(--gold2);white-space:nowrap;
+      text-shadow:0 0 30px rgba(201,161,74,.5),0 0 80px rgba(201,161,74,.2)}
+    .cost-note{font-size:14px;color:var(--dimmer);margin-top:28px;line-height:1.75;padding-top:28px;border-top:1px solid var(--bord)}
+
+    /* ─────────────────────────────────────────────
+       TALENT RECRUITMENT (NEW)
+    ───────────────────────────────────────────── */
+    #talent{padding:130px 0;background:var(--bg);position:relative;overflow:hidden}
+    .talent-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:72px}
+    .talent-col{background:var(--bg3);padding:44px 36px;border:1px solid var(--bord);position:relative;overflow:hidden;transition:border-color .3s}
+    .talent-col:hover{border-color:rgba(123,92,232,.3)}
+    .talent-col::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--tc,var(--pur))}
+    .talent-big-n{font-family:'Barlow Condensed',sans-serif;font-size:96px;font-weight:900;line-height:.9;color:transparent;-webkit-text-stroke:1px rgba(123,92,232,.12);margin-bottom:20px;letter-spacing:.02em}
+    .talent-type{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.35em;text-transform:uppercase;margin-bottom:8px}
+    .talent-h{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;text-transform:uppercase;margin-bottom:6px;letter-spacing:.02em}
+    .talent-tag{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--dim);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--bord)}
+    .talent-body{font-size:15px;line-height:1.75;color:var(--dim)}
+    .talent-save{margin-top:56px;background:var(--bg3);border:1px solid var(--bord2);padding:48px;display:grid;grid-template-columns:auto 1fr;gap:60px;align-items:center}
+    .ts-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:900;color:#ffffff;text-shadow:0 0 30px var(--pur);white-space:nowrap;line-height:1.1}
+    .ts-label{font-size:13px;color:var(--dimmer);margin-top:6px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;max-width:200px}
+
+    /* ─────────────────────────────────────────────
+       MERCH & PRODUCTS (NEW)
+    ───────────────────────────────────────────── */
+    #merch{padding:130px 0;background:var(--bg2);position:relative;overflow:hidden}
+    #merch::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(201,161,74,.07) 0%,transparent 65%)}
+    .merch-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-top:72px}
+    .merch-stat{background:var(--bg3);padding:40px 28px;border:1px solid var(--bord);position:relative;overflow:hidden;transition:border-color .3s}
+    .merch-stat:hover{border-color:rgba(201,161,74,.3)}
+    .merch-stat::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--ms,var(--gold)),transparent)}
+    .merch-num{font-family:'Barlow Condensed',sans-serif;font-size:clamp(48px,5.5vw,76px);font-weight:900;color:#ffffff;text-shadow:0 0 40px var(--ms,var(--gold));line-height:1;margin-bottom:14px}
+    .merch-num-label{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;line-height:1.3}
+    .merch-num-desc{font-size:13px;color:var(--dim);line-height:1.6}
+    .merch-body{margin-top:72px}
+    .merch-body > .body{max-width:100%;margin-bottom:40px}
+    .merch-items-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .merch-item{background:var(--bg3);border:1px solid var(--bord);padding:22px 24px;transition:border-color .3s}
+    .merch-item:hover{border-color:rgba(201,161,74,.3)}
+    .merch-item h5{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+    .merch-item p{font-size:14px;color:var(--dim);line-height:1.65}
+    .merch-takeaway{margin-top:60px;background:var(--bg);border:1px solid var(--bord2);padding:52px;text-align:center}
+    .merch-takeaway .mt-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.4em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;display:block}
+    .merch-takeaway p{font-size:17px;line-height:1.8;color:var(--dim);max-width:820px;margin:0 auto}
+
+    @media(max-width:960px){
+      .wrap{padding:0 24px}nav{padding:16px 24px}
+      nav ul{display:none}
+      .opp-beat,.stats-grid,.obj-grid,.layers,.pillar-grid,.funnel-vis,.mult-grid,.mono-grid,.kpi-layout,.close-principles,.thesis-quote+.pillar-grid,.mi-layout,.talent-grid,.merch-stats,.merch-items-grid,.talent-save{grid-template-columns:1fr}
+      .opp-beat{padding:36px 28px}.opp-beat-content{border-left:none;padding-left:0;border-top:1px solid var(--bord);padding-top:24px;margin-top:16px}
+      .funnel-vis{grid-template-columns:repeat(2,1fr)}
+      .kpi-grid{grid-template-columns:repeat(2,1fr)}
+      .rpam-box{grid-template-columns:1fr;padding:36px 28px}
+      .cost-compare{padding:36px 28px}
+      .cost-row{grid-template-columns:1fr auto;gap:16px}.cost-row-n{display:none}
+      .cost-row-hero{margin:0 -28px;padding:28px 28px !important}
+      footer{flex-direction:column;gap:12px;text-align:center;padding:24px}
+    }
+  </style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-l">
+    <img src="LORLogo2.png" alt="League of Rock">
+    <span>The Social Media Empire</span>
+  </div>
+  <ul>
+    <li><a href="#opportunity">Opportunity</a></li>
+    <li><a href="#framework">Framework</a></li>
+    <li><a href="#funnel">Funnel</a></li>
+    <li><a href="#monetization">Revenue</a></li>
+    <li><a href="#kpis">KPIs</a></li>
+    <li><a href="#close">Close</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 1 — HERO
+══════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-rings">
+    <div class="h-ring"></div>
+    <div class="h-ring"></div>
+    <div class="h-ring"></div>
+  </div>
+  <div class="hero-scan"></div>
+  <div class="particles" id="particles"></div>
+  <div class="hero-inner">
+    <img src="LORLogo2.png" alt="League of Rock" class="hero-logo">
+    <div class="hero-super">A Partner Briefing · League of Rock Inc.</div>
+    <h1 class="hero-title">
+      <span class="t1">The Social</span>
+      <span class="t2">Media</span>
+      <span class="t3">Empire.</span>
+    </h1>
+    <div class="hero-rule"><span>2026</span></div>
+    <p class="hero-tag">The engine that turns League of Rock from a show<br>into a self-sustaining IP.</p>
+    <a href="#opportunity" class="hero-cta">
+      View the Strategy
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1L13 7L7 13M13 7H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+  <div class="scroll-ind"><span>Scroll</span><div class="scroll-rod"></div></div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 2 — THE OPPORTUNITY
+══════════════════════════════════════════════ -->
+<section id="opportunity">
+  <div class="wrap">
+    <div class="sec-top r">
+      <span class="eyebrow pur">The Opportunity</span>
+      <h2 class="h1">The social community is the backbone of the League of Rock.</h2>
+      <p class="body">Network distribution puts the show in front of audiences on premiere weekends. The social media ecosystem keeps those audiences engaged between episodes, between seasons, and between regional expansions — and turns them into a measurable, monetizable business asset.</p>
+    </div>
+    <div class="opp-beats">
+      <div class="opp-beat r" style="--ob:var(--pur2)">
+        <span class="beat-ghost" aria-hidden="true">01</span>
+        <div class="opp-beat-n">01</div>
+        <div class="opp-beat-content">
+          <div class="opp-beat-h">The show creates the audience.<br><span class="hl">Social keeps them.</span></div>
+          <p class="opp-beat-b">Without an ecosystem to catch them, audiences scatter the moment a season ends. The social layer is what keeps the company alive between episodes and after the final credits roll.</p>
+        </div>
+        <div class="opp-beat-bar"></div>
+      </div>
+      <div class="opp-beat r d1" style="--ob:var(--blue2)">
+        <span class="beat-ghost" aria-hidden="true">02</span>
+        <div class="opp-beat-n">02</div>
+        <div class="opp-beat-content">
+          <div class="opp-beat-h">Social produces data.<br><span class="hl">Data unlocks leverage.</span></div>
+          <p class="opp-beat-b">Audience analytics give us bargaining power in every future negotiation. We walk into every deal with receipts — not pitch decks. Data turns "we think this will work" into "this already works."</p>
+        </div>
+        <div class="opp-beat-bar"></div>
+      </div>
+      <div class="opp-beat r d2" style="--ob:var(--gold)">
+        <span class="beat-ghost" aria-hidden="true">03</span>
+        <div class="opp-beat-n">03</div>
+        <div class="opp-beat-content">
+          <div class="opp-beat-h">Social opens revenue lines<br><span class="hl">broadcast doesn't reach.</span></div>
+          <p class="opp-beat-b">Ad revenue, brand integrations, products, live events, music rights, memberships, licensing — each stream strengthens the others. No single platform can break the business.</p>
+        </div>
+        <div class="opp-beat-bar"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 3 — STRATEGIC THESIS
+══════════════════════════════════════════════ -->
+<section id="thesis">
+  <div class="wrap">
+    <div class="sec-top r" style="text-align:center;margin:0 auto 72px">
+      <span class="eyebrow gold">The Strategic Thesis</span>
+      <h2 class="h1" style="font-size:clamp(26px,3.9vw,56px);line-height:1.2;letter-spacing:.03em;white-space:nowrap">We're not building a marketing channel.<br>We're building a media company.</h2>
+    </div>
+    <div class="thesis-quote r">
+      "Most TV shows treat social as a promotional arm. We treat it as a parallel business — one that runs <em>year-round</em>, captures audience data the broadcast deal doesn't, and creates monetization streams the show alone can't reach. This is how League of Rock Inc. graduates from 'IP licensor' to '<em>IP operator</em>.'"
+    </div>
+    <div class="pillar-grid" style="margin-top:72px">
+      <div class="pcard r" style="--pc:var(--gold)">
+        <div class="pcard-n">01</div>
+        <div class="pcard-t">One Ecosystem, Owned End-to-End</div>
+        <p class="pcard-b">Algorithm-proof email, community, and membership layers — the assets the platforms can't take from us. If TikTok disappears tomorrow, the email list and Discord remain.</p>
+      </div>
+      <div class="pcard r d1" style="--pc:var(--pur2)">
+        <div class="pcard-n">02</div>
+        <div class="pcard-t">Diversified Income that Compounds</div>
+        <p class="pcard-b">Ad revenue, brand integrations, products, live events, music rights, memberships, licensing — each stream strengthens the others. No single platform can break the business.</p>
+      </div>
+      <div class="pcard r d2" style="--pc:var(--blue2)">
+        <div class="pcard-n">03</div>
+        <div class="pcard-t">Built-in Audience Asset</div>
+        <p class="pcard-b">Every viewer becomes a follower; every follower becomes a customer; every customer becomes an evangelist who recruits the next stranger. The loop closes automatically.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 4 — THE MARKET
+══════════════════════════════════════════════ -->
+<section id="market">
+  <div class="wrap">
+    <div class="sec-top r" style="text-align:center;max-width:680px;margin:0 auto">
+      <span class="eyebrow pur">The Market</span>
+      <h2 class="h1">The playbook is proven.<br>The category is hot.</h2>
+      <p class="body" style="max-width:100%">Every component of this strategy has been proven at scale by category-defining companies. The social-led media business model is no longer experimental.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card r" style="--sc:var(--gold)">
+        <div class="stat-num" data-count="899" data-prefix="$" data-suffix="M">$0M</div>
+        <div class="stat-label">MrBeast / Beast Industries Projected 2025 Revenue</div>
+        <p class="stat-desc">The diversification playbook works — content is the audience-acquisition channel; profit lives in products, brand deals, and licensing.</p>
+        <div class="stat-source">SOURCE: Beast Industries, 2025</div>
+      </div>
+      <div class="stat-card r d1" style="--sc:var(--pur2)">
+        <div class="stat-num" data-count="59.6" data-suffix="M">0M</div>
+        <div class="stat-label">Views in 5 Days — Netflix Stranger Things Finale</div>
+        <p class="stat-desc">Tentpole shows still command attention — but social is what extends their lifetime value beyond the airing window.</p>
+        <div class="stat-source">SOURCE: Netflix, 2024</div>
+      </div>
+      <div class="stat-card r d2" style="--sc:var(--amber)">
+        <div class="stat-num" data-count="138" data-prefix="+" data-suffix="%">+0%</div>
+        <div class="stat-label">YoY Growth in Newsletter Paid Subscription Revenue</div>
+        <p class="stat-desc">Owned audience monetizes. Email is no longer 'nice to have' — it's the spine of every successful creator-led business.</p>
+        <div class="stat-source">SOURCE: Beehiiv State of Newsletters, 2026</div>
+      </div>
+      <div class="stat-card r d3" style="--sc:var(--blue2)">
+        <div class="stat-num" data-count="36" data-suffix="M">0M</div>
+        <div class="stat-label">Views on a Single Tiny Desk Performance, 2024</div>
+        <p class="stat-desc">Music performances are the most universally shareable content format that exists — language-agnostic, emotion-driven, infinitely re-postable.</p>
+        <div class="stat-source">SOURCE: NPR Tiny Desk, 2024</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDES 5+6 — OBJECTIVES
+══════════════════════════════════════════════ -->
+<section id="objectives">
+  <div class="wrap">
+    <div class="sec-top r">
+      <span class="eyebrow gold">Core Objectives</span>
+      <h2 class="h1">What this ecosystem builds.</h2>
+    </div>
+    <div class="obj-tabs">
+      <div class="obj-tab active" data-panel="p1">The Audience</div>
+      <div class="obj-tab" data-panel="p2">The Strategic Asset</div>
+    </div>
+    <div class="obj-panel active" id="p1">
+      <div class="obj-grid">
+        <div class="obj-card r"><div class="obj-num" style="--oc:var(--gold)">01</div><h3>Build a Fanbase with Deep Connection</h3><p>Audiences fall in love with characters — coaches, contestants, the bands — not just the show. The parasocial bond drives every other outcome in this strategy. When fans feel genuine connection, they follow, vote, defend, buy merch, attend tours, and bring friends.</p></div>
+        <div class="obj-card r d1"><div class="obj-num" style="--oc:var(--gold)">02</div><h3>Drive Traffic to the Show</h3><p>Engineered social-to-streaming funnels deliver viewers directly to the show on premiere weekends. Every clip ends pointing at the next destination. Short-form view → long-form view → tune-in behavior.</p></div>
+        <div class="obj-card r d2"><div class="obj-num" style="--oc:var(--amber)">03</div><h3>Drive Traffic to Products</h3><p>Merchandise, music releases, live event tickets, signature products. Without a social ecosystem, every product launch starts from cold awareness. With one, every launch is a warm offer to people who already love the brand.</p></div>
+        <div class="obj-card r d3"><div class="obj-num" style="--oc:var(--amber)">04</div><h3>Drive Traffic to Brand Deals</h3><p>Premium engaged audiences command premium CPMs. Sponsored challenges are structural to the show format — social extends those relationships year-round. A 1M-subscriber music channel routinely commands $25K–$50K per integrated brand deal.</p></div>
+      </div>
+    </div>
+    <div class="obj-panel" id="p2">
+      <div class="obj-grid">
+        <div class="obj-card r"><div class="obj-num" style="--oc:var(--pur2)">05</div><h3>Proven Analytics = Leverage in Every Future Deal</h3><p>Hard data on audience size, demographics, engagement, and regional performance gives us bargaining power. We walk into Season 2, Season 3, and regional spin-off negotiations with receipts — not pitch decks. Data turns "we think this will work" into "this already works."</p></div>
+        <div class="obj-card r d1"><div class="obj-num" style="--oc:var(--pur2)">06</div><h3>New Market Intelligence</h3><p>Regional engagement data tells us where the show is already pulling — so we expand into NY, LA, the UK, and beyond into proven territories. Each region's social engagement is a leading indicator of how that market will respond to a localized show.</p></div>
+        <div class="obj-card r d2"><div class="obj-num" style="--oc:var(--blue2)">07</div><h3>Talent Recruitment Engine</h3><p>The social audience becomes the casting pool for future seasons — basement musicians, coaches, guest artists, sponsors. Casting costs drop dramatically when you have an engaged community. Alumni from past seasons become Season 5 All-Stars.</p></div>
+        <div class="obj-card r d3"><div class="obj-num" style="--oc:var(--blue2)">08</div><h3>Real-Time Audience Feedback</h3><p>Comments, polls, watch behavior, Discord conversations — direct signal on what fans actually want. The show evolves based on data, not gut feel. We learn what works in week one and apply it by week six.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 7 — THE FRAMEWORK
+══════════════════════════════════════════════ -->
+<section id="framework">
+  <div class="wrap">
+    <div class="sec-top r" style="text-align:center;max-width:680px;margin:0 auto">
+      <span class="eyebrow blue">The Framework</span>
+      <h2 class="h1">The social ecosystem<br>at a glance.</h2>
+      <p class="body" style="max-width:100%">Three connected layers. Each with a distinct purpose, distinct platforms, and distinct content strategy. Together they form a complete funnel from total strangers to paying super-fans.</p>
+    </div>
+    <div class="layers">
+      <div class="layer-col r" style="--lc:var(--blue)">
+        <div class="layer-num" style="color:var(--blue2)">Layer 01</div>
+        <div class="layer-name">Discovery</div>
+        <div class="layer-role" style="color:var(--blue2)">Top of Funnel · Reach</div>
+        <div class="layer-plat">TikTok · Instagram Reels · YouTube Shorts</div>
+        <p class="layer-body">Short-form vertical video engineered for the algorithm. Built for people who have never heard of LOR. This is where we capture the next million viewers — one 15-second clip at a time. Disposable in feel, durable in compound effect.</p>
+        <div class="layer-tags">
+          <span class="layer-tag">15-sec clips</span><span class="layer-tag">Algorithm-native</span><span class="layer-tag">Mass reach</span>
+        </div>
+      </div>
+      <div class="layer-col r d1" style="--lc:var(--pur)">
+        <div class="layer-num" style="color:var(--pur2)">Layer 02</div>
+        <div class="layer-name">Depth</div>
+        <div class="layer-role" style="color:var(--pur2)">Middle of Funnel · Relationship</div>
+        <div class="layer-plat">YouTube Long-form · Podcast · Livestreams</div>
+        <p class="layer-body">Long-form storytelling, performances, BTS, interviews. Where parasocial bonds form. Someone who saw a 30-second clip becomes someone who watched a 20-minute mini-doc — and then someone who subscribes to every drop.</p>
+        <div class="layer-tags">
+          <span class="layer-tag">Mini-docs</span><span class="layer-tag">Parasocial</span><span class="layer-tag">Evergreen</span>
+        </div>
+      </div>
+      <div class="layer-col r d2" style="--lc:var(--gold)">
+        <div class="layer-num" style="color:var(--gold)">Layer 03</div>
+        <div class="layer-name">Owned</div>
+        <div class="layer-role" style="color:var(--gold)">Bottom of Funnel · Conversion</div>
+        <div class="layer-plat">Newsletter (Beehiiv) · Discord · Membership</div>
+        <p class="layer-body">Audiences we own outright. Algorithm-proof. The asset that monetizes and de-risks the whole business. If TikTok dies tomorrow, the email list and Discord remain. This is the layer that turns attention into a long-term company asset.</p>
+        <div class="layer-tags">
+          <span class="layer-tag">Algorithm-proof</span><span class="layer-tag">Owned forever</span><span class="layer-tag">Revenue-ready</span>
+        </div>
+      </div>
+    </div>
+    <div class="layers-flow r d2">
+      <div class="flow-arrow"></div>
+      <div class="flow-text">All three layers feed the monetization engine — and the monetization engine feeds back into the show through audience data, sponsor relationships, and talent discovery. The loop closes.</div>
+      <div class="flow-arrow" style="transform:rotate(180deg)"></div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 8 — CONTENT PILLARS
+══════════════════════════════════════════════ -->
+<section id="pillars">
+  <div class="wrap">
+    <div class="sec-top r">
+      <span class="eyebrow gold">Inside the Framework</span>
+      <h2 class="h1">Six content pillars.<br>Endless permutations.</h2>
+      <p class="body">Every piece of content we produce falls into one of six pillars. By committing to a defined set, the production team can move fast — and the audience knows what to expect from us.</p>
+    </div>
+    <div class="pillar-grid">
+      <div class="pillar r" style="--pc:var(--pur2)"><span class="pillar-icon">🎬</span><div class="pillar-n">01 · Behind the Scenes</div><div class="pillar-t">Cinematic BTS</div><p class="pillar-b">Feature-film production value. The band rehearsal room. The coach's pep talk. The moment a basement musician realizes they can actually do this. Most reality shows have phone-quality BTS. Ours will look like A24.</p></div>
+      <div class="pillar r d1" style="--pc:var(--blue2)"><span class="pillar-icon">🎭</span><div class="pillar-n">02 · Outtakes from the Show</div><div class="pillar-t">Viral by Design</div><p class="pillar-b">The shareable moments that didn't fit the broadcast cut. Quick hits. Surprise reactions. The line nobody expected. Outtakes feel like an inside joke shared between the audience and production — they deepen the bond.</p></div>
+      <div class="pillar r d2" style="--pc:var(--gold)"><span class="pillar-icon">🎙️</span><div class="pillar-n">03 · Interviews</div><div class="pillar-t">Masterclass Depth</div><p class="pillar-b">Long-form sit-down interviews with coaches, contestants, and guest artists. Stories from 40 years of rock history. These build parasocial depth and become evergreen content — searchable long after a season ends.</p></div>
+      <div class="pillar r" style="--pc:var(--amber)"><span class="pillar-icon">❤️</span><div class="pillar-n">04 · Backstories from Contestants</div><div class="pillar-t">The Emotional Engine</div><p class="pillar-b">The emotional engine of the entire ecosystem. Mini-documentaries on each band member: the Reluctant Rocker, the Shy Singer, the Basement Musician. The 'why I never did this' is often more powerful than the performance itself.</p></div>
+      <div class="pillar r d1" style="--pc:var(--pur2)"><span class="pillar-icon">🎸</span><div class="pillar-n">05 · Full Performances</div><div class="pillar-t">The Tiny Desk Playbook</div><p class="pillar-b">Every band's full live set. Every coach's session. The unreleased rehearsal-room take. Music performances are the most universally shareable content format — language-agnostic, emotion-driven, infinitely re-postable.</p></div>
+      <div class="pillar r d2" style="--pc:var(--blue2)"><span class="pillar-icon">😄</span><div class="pillar-n">06 · Funny Moments</div><div class="pillar-t">Highest Velocity</div><p class="pillar-b">The clippable, repeatable, share-worthy comedic beats. What gets screenshot. What becomes the meme. Humor is the highest-velocity content category on every platform — and band dynamics produce comedy gold organically.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 9 — THE FUNNEL
+══════════════════════════════════════════════ -->
+<section id="funnel">
+  <div class="wrap">
+    <div class="sec-top r" style="text-align:center;max-width:680px;margin:0 auto">
+      <span class="eyebrow pur">The Funnel</span>
+      <h2 class="h1">How strangers become<br>super-fans.</h2>
+      <p class="body" style="max-width:100%">Every short-form view feeds long-form. Every long-form view feeds email. Every subscriber feeds community. Every community member feeds revenue. Each stage compounds — and our existing alumni base seeds the bottom of the funnel from day one.</p>
+    </div>
+    <div class="funnel-vis" id="funnelVis">
+      <div class="f-card" style="--fc:rgba(140,100,255,.9)">
+        <span class="f-bg-n" aria-hidden="true">1</span>
+        <div class="f-num">01</div>
+        <div class="f-stage-n">Stranger</div>
+        <div class="f-div"></div>
+        <div class="f-title">The Hook</div>
+        <p class="f-body">Sees a clip. The first 1.5 seconds decide everything.</p>
+      </div>
+      <div class="f-card" style="--fc:rgba(123,92,232,1)">
+        <span class="f-bg-n" aria-hidden="true">2</span>
+        <div class="f-num">02</div>
+        <div class="f-stage-n">Follower</div>
+        <div class="f-div"></div>
+        <div class="f-title">The Follow</div>
+        <p class="f-body">Hits follow. We have a chance to reach them again — algorithm permitting.</p>
+      </div>
+      <div class="f-card" style="--fc:var(--blue2)">
+        <span class="f-bg-n" aria-hidden="true">3</span>
+        <div class="f-num">03</div>
+        <div class="f-stage-n">Viewer</div>
+        <div class="f-div"></div>
+        <div class="f-title">The Depth</div>
+        <p class="f-body">Watches long-form. Now they know the people, the show, the world.</p>
+      </div>
+      <div class="f-card" style="--fc:var(--pur)">
+        <span class="f-bg-n" aria-hidden="true">4</span>
+        <div class="f-num">04</div>
+        <div class="f-stage-n">Subscriber</div>
+        <div class="f-div"></div>
+        <div class="f-title">The Ownership</div>
+        <p class="f-body">Joins email list. We own this relationship. No algorithm in between.</p>
+      </div>
+      <div class="f-card" style="--fc:var(--amber)">
+        <span class="f-bg-n" aria-hidden="true">5</span>
+        <div class="f-num">05</div>
+        <div class="f-stage-n">Member</div>
+        <div class="f-div"></div>
+        <div class="f-title">The Community</div>
+        <p class="f-body">Joins Discord. Talking to other fans — the bond deepens beyond us.</p>
+      </div>
+      <div class="f-card" style="--fc:var(--gold)">
+        <span class="f-bg-n" aria-hidden="true">6</span>
+        <div class="f-num">06</div>
+        <div class="f-stage-n">Super-Fan</div>
+        <div class="f-div"></div>
+        <div class="f-title">The Payoff</div>
+        <p class="f-body">Pays for membership. Buys merch. Attends events. Brings the next stranger in.</p>
+      </div>
+    </div>
+    <div class="funnel-benchmarks r d2">
+      <div class="bench-item"><h4>Free-to-Paid Conversion Benchmark</h4><p>4–8% in engaged creator communities. At 5,000 paid members this represents ~$300K ARR at Beacon pricing.</p></div>
+      <div class="bench-item"><h4>Email Open Rate Benchmark</h4><p>30–43% for engaged audiences (Beehiiv State of Newsletters, 2026) — directly comparable to category-defining creator businesses.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     MARKET INTELLIGENCE
+══════════════════════════════════════════════ -->
+<section id="market-intel">
+  <div class="wrap">
+    <div class="sec-top r" style="text-align:center;max-width:700px;margin:0 auto">
+      <span class="eyebrow blue">Market Intelligence</span>
+      <h2 class="h1">Social analytics tell us<br>which city wants us next.</h2>
+      <p class="body" style="max-width:100%">Traditional market testing is slow, expensive, and often wrong. Focus groups cost $50K–$200K per market and produce data that's stale by air time. Social analytics give us something better — real-time, real-audience signal on which cities are already pulling toward League of Rock.</p>
+    </div>
+    <div class="mi-layout">
+      <div class="platform-list">
+        <div class="platform-item r">
+          <div class="plat-badge" style="color:var(--blue2);border-color:rgba(96,165,250,.3)">YT</div>
+          <div><h4>YouTube Studio</h4><p>Geographic watch-time data, retention curves by region, subscriber demographics, traffic source analytics.</p></div>
+        </div>
+        <div class="platform-item r d1">
+          <div class="plat-badge" style="color:var(--pur2);border-color:rgba(157,127,255,.3)">TK</div>
+          <div><h4>TikTok Analytics</h4><p>Top territories by follower growth and engagement; trending content patterns by region; demographic breakdowns.</p></div>
+        </div>
+        <div class="platform-item r d2">
+          <div class="plat-badge" style="color:var(--amber);border-color:rgba(232,137,42,.3)">IG</div>
+          <div><h4>Instagram Insights</h4><p>Audience location at city level, age and gender splits, active times, content performance by format.</p></div>
+        </div>
+        <div class="platform-item r d3">
+          <div class="plat-badge" style="color:var(--blue);border-color:rgba(59,127,255,.3)">FB</div>
+          <div><h4>Facebook / Meta Business Suite</h4><p>Cross-platform reach data, lookalike audience modeling, ad performance signals by market.</p></div>
+        </div>
+      </div>
+      <div class="r d1">
+        <p class="body" style="max-width:100%;margin-bottom:28px">Every major platform provides geographic, demographic, and behavioral analytics down to the city level. We see where content is over-indexing, where engagement is deepest, where viewers are sharing most. That data becomes a heat map of the regions most ready for a localized version of the show.</p>
+        <p class="body" style="max-width:100%">When the time comes to launch in a new city, we don't guess — we read the data accumulated since day one. Cities with high organic engagement get green-lit first. Cities with weaker signal get a content push to build the audience before a production decision. Risk on each expansion drops dramatically.</p>
+      </div>
+    </div>
+    <div class="cost-compare r">
+      <span class="cc-label">The Cost Advantage</span>
+      <div class="cost-rows">
+        <div class="cost-row">
+          <span class="cost-row-n">01</span>
+          <span class="cost-type">Traditional market research per new region</span>
+          <span class="cost-val">$150K–$500K</span>
+        </div>
+        <div class="cost-row">
+          <span class="cost-row-n">02</span>
+          <span class="cost-type">Timeline: focus groups to usable data</span>
+          <span class="cost-val">3–6 months</span>
+        </div>
+        <div class="cost-row cost-row-hero">
+          <span class="cost-row-n">03</span>
+          <span class="cost-type">Social analytics we already collect</span>
+          <span class="cost-val">~$0</span>
+        </div>
+      </div>
+      <p class="cost-note">Real audience behavior — not survey responses — for the cost of the content work we're already doing. The intelligence comes free with the work.</p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     TALENT RECRUITMENT
+══════════════════════════════════════════════ -->
+<section id="talent">
+  <div class="wrap">
+    <div class="sec-top r">
+      <span class="eyebrow gold">Talent Recruitment</span>
+      <h2 class="h1">Stop chasing talent.<br>Build a magnet.</h2>
+      <p class="body">Traditional casting is expensive, slow, and reactive — casting directors, scouts, agency relationships, cattle-call auditions. With a strong social ecosystem, the model flips entirely: talent comes to us. Contestants, coaches, and crew surfacing themselves through engagement with our content.</p>
+    </div>
+    <div class="talent-grid">
+      <div class="talent-col r" style="--tc:var(--blue)">
+        <div class="talent-big-n">01</div>
+        <div class="talent-type" style="color:var(--blue2)">Contestants</div>
+        <div class="talent-h">The Basement Musicians</div>
+        <div class="talent-tag">"People who always wanted to play — and never did"</div>
+        <p class="talent-body">This community self-identifies in social comments, Discord conversations, and shared posts. Every clip attracts that exact psychographic. By Season 2, our casting funnel is the audience itself — the people who watched Season 1 and thought "that could be me." Casting calls become invite-driven, not search-driven.</p>
+      </div>
+      <div class="talent-col r d1" style="--tc:var(--pur)">
+        <div class="talent-big-n">02</div>
+        <div class="talent-type" style="color:var(--pur2)">Coaches</div>
+        <div class="talent-h">The Pro Musicians</div>
+        <div class="talent-tag">"A coach slot becomes a desired industry credential"</div>
+        <p class="talent-body">Working musicians are deeply networked and watch what other working musicians are doing. When LOR develops the visual signature our content strategy creates, coaches start raising their hands — similar to how a Tiny Desk or COLORS slot is now pursued by major artists. We move from "who can we get?" to "who do we choose?"</p>
+      </div>
+      <div class="talent-col r d2" style="--tc:var(--gold)">
+        <div class="talent-big-n">03</div>
+        <div class="talent-type" style="color:var(--gold)">Crew</div>
+        <div class="talent-h">The Builders</div>
+        <div class="talent-tag">"Editors, camera ops, producers who find us first"</div>
+        <p class="talent-body">With a strong social presence, talented crew find us before we go looking — they reach out because they want to work on the production whose content they admire. This reduces recruiting costs, shortens hiring cycles, and improves cultural fit. The people coming in already understand what we do.</p>
+      </div>
+    </div>
+    <div class="talent-save r d2">
+      <div>
+        <div class="ts-num">$200K–$500K</div>
+        <div class="ts-label">Traditional casting + recruiting cost per season</div>
+      </div>
+      <div>
+        <span class="eyebrow gold" style="margin-bottom:12px">What This Saves Us</span>
+        <p style="font-size:15px;line-height:1.75;color:var(--dim)">A social-led recruitment funnel doesn't eliminate those line items — but it reduces them substantially. Inbound applicants from social cost effectively nothing to surface. The cost shifts from <em style="color:var(--text);font-style:normal">finding people</em> to <em style="color:var(--gold2);font-style:normal">choosing among them.</em> And quality of fit goes up — people who find us through our content have already self-selected on values, tone, and aesthetic. Fewer dropouts. Stronger arcs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     MERCH & PRODUCTS
+══════════════════════════════════════════════ -->
+<section id="merch">
+  <div class="wrap">
+    <div class="sec-top r" style="text-align:center;max-width:720px;margin:0 auto">
+      <span class="eyebrow gold">Merch & Products</span>
+      <h2 class="h1">Disney sells $63 billion<br>in merch a year.</h2>
+      <p class="body" style="max-width:100%">Disney is the world's most valuable IP company — not because of parks, streaming, or movies. Because of merchandise. The lesson: if you build IP people love, the merchandise economy attached to it can dwarf the original content business. Social media is the engine that makes that economy run.</p>
+    </div>
+    <div class="merch-stats">
+      <div class="merch-stat r" style="--ms:var(--gold)">
+        <div class="merch-num" data-count="63" data-prefix="$" data-suffix="B">$0B</div>
+        <div class="merch-num-label">Disney Annual Licensed Product Sales (2024)</div>
+        <p class="merch-num-desc">~20% of the entire $307.9B global licensed product market. The largest licensor on Earth — by a wide margin.</p>
+      </div>
+      <div class="merch-stat r d1" style="--ms:var(--pur2)">
+        <div class="merch-num" data-count="2.6" data-prefix="$" data-suffix="B">$0B</div>
+        <div class="merch-num-label">Annual Revenue from Stitch-Themed Products Alone</div>
+        <p class="merch-num-desc">Up from $200M just five years prior — a 13x increase. One character. One franchise. Built on fan love.</p>
+      </div>
+      <div class="merch-stat r d2" style="--ms:var(--amber)">
+        <div class="merch-num" data-count="500" data-prefix="$" data-suffix="M">$0M</div>
+        <div class="merch-num-label">Taylor Swift's Eras Tour Merch — North American Leg</div>
+        <p class="merch-num-desc">Music + a passionate audience = an unprecedented merch economy. The Swift template is the closest analogue to LOR's opportunity.</p>
+      </div>
+      <div class="merch-stat r d3" style="--ms:var(--blue2)">
+        <div class="merch-num" data-count="10" data-suffix="x">0x</div>
+        <div class="merch-num-label">Revenue Multiplier — YouTubers Who Sell Merch vs. Ads Alone</div>
+        <p class="merch-num-desc">Source: Sellfy analysis of 2,500+ creator stores. Merch isn't a bonus revenue line — it's the largest one for many creator-led businesses.</p>
+      </div>
+    </div>
+    <div class="merch-body r d1">
+      <span class="eyebrow gold" style="margin-bottom:14px">Why Social is the Merch Engine</span>
+      <p class="body" style="max-width:100%;margin-bottom:40px">Every piece of content becomes a soft promotional moment: a coach wearing the tour shirt, a contestant unboxing the drop, a BTS shot in branded apparel. The product is woven into the content; the content drives the sales. Without social, merch is a passive catalog. With social, it's a live, demand-generating engine.</p>
+      <span class="eyebrow pur" style="margin-bottom:20px">LOR's Merch Opportunity</span>
+      <div class="merch-items-grid">
+        <div class="merch-item"><h5>Show-Branded Apparel</h5><p>Limited-edition tees, hoodies, hats — seasonal drops tied to specific episodes or moments.</p></div>
+        <div class="merch-item"><h5>Band-Themed Lines</h5><p>Each band that forms in a season gets its own merch line. Fans pick favorites; their merch sells out first.</p></div>
+        <div class="merch-item"><h5>Coach Signature Collabs</h5><p>Co-branded items with each coach. Their followers buy in. We share revenue. Everyone wins.</p></div>
+        <div class="merch-item"><h5>Vinyl & Recorded Music</h5><p>Season anthems, EPs from breakout bands, live recordings from the finale. Physical and digital.</p></div>
+        <div class="merch-item"><h5>Premium & Lifestyle</h5><p>Higher-end items — jackets, instrument accessories, signed pieces — tied to specific cultural moments.</p></div>
+        <div class="merch-item"><h5>Sponsor-Tied Products</h5><p>Co-branded products with our sponsored-challenge partners. Each challenge becomes a small product launch.</p></div>
+      </div>
+    </div>
+    <div class="merch-takeaway r d2">
+      <span class="mt-label">The Takeaway</span>
+      <p>Disney's $63B proves merchandise can be the largest line of business for an IP company — bigger than the original content that created the IP. Taylor Swift's $500M in tour merch proves music-IP merchandise is a category of its own. League of Rock Inc.'s merch potential is unlocked by — and only by — the social media engine. Without it, merch is a side hustle. With it, it's the second-largest revenue line in the company.</p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 10 — THE MULTIPLIERS
+══════════════════════════════════════════════ -->
+<section id="multipliers">
+  <div class="wrap">
+    <div class="sec-top r">
+      <span class="eyebrow gold">The Multipliers</span>
+      <h2 class="h1">Two engines most shows<br>don't have. We have both.</h2>
+      <p class="body">Built into the structure of League of Rock are two value-multiplying engines that compound the social ecosystem's economics far beyond what a typical TV-companion social presence achieves.</p>
+    </div>
+    <div class="mult-grid">
+      <div class="mult-panel r" style="--mp:var(--gold);--mpr:201,161,74">
+        <div class="mult-lbl" style="color:var(--gold)">Engine 01</div>
+        <div class="mult-t">The Sub-IP Multiplier</div>
+        <p class="mult-stat-lbl">Every person on screen is a sub-channel.</p>
+        <div class="mult-hero-stat" data-count="4700" data-prefix="+" data-suffix="%">+0%</div>
+        <p class="mult-stat-lbl">Increase in daily US streams for a single artist within one week of a Tiny Desk slot. Today, that value goes entirely uncaptured by the platform that created the moment. <strong style="color:var(--text)">League of Rock is designed to capture it.</strong></p>
+        <ul class="mult-list">
+          <li><strong>CONTESTANTS</strong> → owned artists. Right of first refusal on releases. Seed of a future LOR Records.</li>
+          <li><strong>COACHES</strong> → distribution. Each coach gets a #TeamX content track. Their audiences become ours.</li>
+          <li><strong>FORMATS</strong> → multiple IPs. LOR Sessions, Unplugged, Anywhere, Live — each survives any one platform's choices.</li>
+        </ul>
+      </div>
+      <div class="mult-panel r d1" style="--mp:var(--pur);--mpr:123,92,232">
+        <div class="mult-lbl" style="color:var(--pur2)">Engine 02</div>
+        <div class="mult-t">Structural Sponsorship</div>
+        <p class="mult-body">Each YouTube video of the show is built around a Sponsor. The social ecosystem extends those sponsor relationships year-round, beyond the airing window, multiplying the value of every brand partnership.</p>
+        <p class="mult-body" style="margin-bottom:16px">Every challenge win triggers a charity donation — the values architecture is baked in.</p>
+        <p style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--pur2);margin-bottom:12px">Built-in Sponsor Categories</p>
+        <div class="cats">
+          <span class="cat">Music Lifestyle Brands</span>
+          <span class="cat">Instrument Retailers</span>
+          <span class="cat">Instrument Makers</span>
+          <span class="cat">Energy Drinks</span>
+          <span class="cat">Clothing & Lifestyle</span>
+          <span class="cat">Audio & Tech</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 11 — MONETIZATION
+══════════════════════════════════════════════ -->
+<section id="monetization">
+  <div class="wrap">
+    <div class="sec-top r" style="text-align:center;max-width:680px;margin:0 auto">
+      <span class="eyebrow pur">Monetization</span>
+      <h2 class="h1">Twelve revenue streams.<br>One audience.</h2>
+      <p class="body" style="max-width:100%">Diversified income that protects against platform volatility and compounds as the audience grows. The social ecosystem unlocks revenue lines the broadcast deal alone doesn't reach.</p>
+    </div>
+    <div class="mono-grid">
+      <div class="mono-t t1 r">
+        <div class="mono-lbl">Tier One</div><div class="mono-h">Build First</div>
+        <div class="mono-sub">Immediately monetizable · Year 1</div>
+        <ul class="mono-items">
+          <li class="mi"><div class="mi-dot"></div><div><h5>Sponsored Challenges</h5><p>Structural to the show; extended year-round via social across all platforms.</p></div></li>
+          <li class="mi"><div class="mi-dot"></div><div><h5>YouTube AdSense</h5><p>$3–$10 RPM on long-form music/entertainment content. Passive and automatic.</p></div></li>
+          <li class="mi"><div class="mi-dot"></div><div><h5>Merch & Drops</h5><p>Limited drops and team-themed apparel. Drops out-perform evergreen catalog every time.</p></div></li>
+        </ul>
+      </div>
+      <div class="mono-t t2 r d1">
+        <div class="mono-lbl">Tier Two</div><div class="mono-h">Year 1</div>
+        <div class="mono-sub">Medium build complexity · Strong margin</div>
+        <ul class="mono-items">
+          <li class="mi"><div class="mi-dot"></div><div><h5>Live Events</h5><p>Annual LOR Live event; later, a multi-city tour.</p></div></li>
+          <li class="mi"><div class="mi-dot"></div><div><h5>Music Rights & Sync</h5><p>Publishing + recordings + sync licensing. Set up from day one — every day you wait gives away percentages.</p></div></li>
+          <li class="mi"><div class="mi-dot"></div><div><h5>Newsletter Sponsorships</h5><p>$25–$100 CPM at 25K+ engaged subscribers.</p></div></li>
+          <li class="mi"><div class="mi-dot"></div><div><h5>Membership Program</h5><p>$5.99/mo benchmark. Ad-free, exclusives, presales — additive, never a wall.</p></div></li>
+        </ul>
+      </div>
+      <div class="mono-t t3 r d2">
+        <div class="mono-lbl">Tier Three</div><div class="mono-h">Year 2+</div>
+        <div class="mono-sub">Higher complexity · Long-term upside</div>
+        <ul class="mono-items">
+          <li class="mi"><div class="mi-dot"></div><div><h5>Record Label Arm</h5><p>Artist development for breakout contestants. Long-term IP value.</p></div></li>
+          <li class="mi"><div class="mi-dot"></div><div><h5>Format Licensing</h5><p>Regional and international format sales as the franchise expands.</p></div></li>
+          <li class="mi"><div class="mi-dot"></div><div><h5>Education Products</h5><p>Coach Masterclasses; how-to-form-a-band courses; high-margin digital products.</p></div></li>
+          <li class="mi"><div class="mi-dot"></div><div><h5>Equity Brand Deals</h5><p>Stake in brands we partner with — highest long-term upside beyond cash integration fees.</p></div></li>
+        </ul>
+      </div>
+    </div>
+    <!-- Animated revenue bar chart -->
+    <div class="rev-chart" id="revChart">
+      <span class="rev-chart-title">Revenue Stream Progression — Year 1 → Year 3</span>
+      <div class="rev-bars">
+        <div class="rev-bar-row">
+          <div class="rev-bar-label">Sponsored Challenges</div>
+          <div class="rev-bar-track"><div class="rev-bar-fill" data-w="95" style="background:linear-gradient(90deg,var(--gold),var(--gold2))"><span class="rev-bar-inner">Structural to show · Year-round all platforms</span></div></div>
+          <div class="rev-bar-yr" style="color:var(--gold)">Yr 1</div>
+        </div>
+        <div class="rev-bar-row">
+          <div class="rev-bar-label">YouTube AdSense</div>
+          <div class="rev-bar-track"><div class="rev-bar-fill" data-w="78" style="background:linear-gradient(90deg,var(--pur),var(--pur2))"><span class="rev-bar-inner">$3–$10 RPM · Passive income</span></div></div>
+          <div class="rev-bar-yr" style="color:var(--pur2)">Yr 1</div>
+        </div>
+        <div class="rev-bar-row">
+          <div class="rev-bar-label">Merch & Drops</div>
+          <div class="rev-bar-track"><div class="rev-bar-fill" data-w="72" style="background:linear-gradient(90deg,var(--gold),var(--amber))"><span class="rev-bar-inner">Limited drops · Team-themed apparel</span></div></div>
+          <div class="rev-bar-yr" style="color:var(--amber)">Yr 1</div>
+        </div>
+        <div class="rev-bar-row">
+          <div class="rev-bar-label">Live Events</div>
+          <div class="rev-bar-track"><div class="rev-bar-fill" data-w="65" style="background:linear-gradient(90deg,var(--pur),var(--blue))"><span class="rev-bar-inner">Annual LOR Live · Multi-city tour</span></div></div>
+          <div class="rev-bar-yr" style="color:var(--blue2)">Yr 1</div>
+        </div>
+        <div class="rev-bar-row">
+          <div class="rev-bar-label">Music Rights & Sync</div>
+          <div class="rev-bar-track"><div class="rev-bar-fill" data-w="58" style="background:linear-gradient(90deg,var(--blue),var(--blue2))"><span class="rev-bar-inner">Publishing + recordings + sync licensing</span></div></div>
+          <div class="rev-bar-yr" style="color:var(--blue)">Yr 1</div>
+        </div>
+        <div class="rev-bar-row">
+          <div class="rev-bar-label">Membership Program</div>
+          <div class="rev-bar-track"><div class="rev-bar-fill" data-w="50" style="background:linear-gradient(90deg,var(--pur2),var(--blue2))"><span class="rev-bar-inner">$5.99/mo · Exclusives + presales</span></div></div>
+          <div class="rev-bar-yr" style="color:var(--pur2)">Yr 1</div>
+        </div>
+        <div class="rev-bar-row">
+          <div class="rev-bar-label">Format Licensing</div>
+          <div class="rev-bar-track"><div class="rev-bar-fill" data-w="38" style="background:linear-gradient(90deg,var(--amber),var(--gold))"><span class="rev-bar-inner">Regional + international franchise</span></div></div>
+          <div class="rev-bar-yr" style="color:var(--amber)">Yr 2</div>
+        </div>
+        <div class="rev-bar-row">
+          <div class="rev-bar-label">Education Products</div>
+          <div class="rev-bar-track"><div class="rev-bar-fill" data-w="32" style="background:linear-gradient(90deg,var(--blue),var(--pur))"><span class="rev-bar-inner">Coach Masterclasses · Digital courses</span></div></div>
+          <div class="rev-bar-yr" style="color:var(--pur)">Yr 2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 13 — KPIs
+══════════════════════════════════════════════ -->
+<section id="kpis">
+  <div class="wrap">
+    <div class="sec-top r" style="text-align:center;max-width:680px;margin:0 auto">
+      <span class="eyebrow gold">How We Keep Score</span>
+      <h2 class="h1">Targets that prove<br>the asset is real.</h2>
+      <p class="body" style="max-width:100%">Conservative organic targets, sized to be realistic against the show's amplification. With the broadcast deal driving top-of-funnel traffic, all numbers are likely to outperform these benchmarks meaningfully.</p>
+    </div>
+    <div class="kpi-grid" id="kpiGrid">
+      <div class="kpi-card" style="--kc:var(--pur2);--fw:100%">
+        <span class="kpi-ghost" aria-hidden="true">5M</span>
+        <span class="kpi-metric">Short-form Reach</span>
+        <div class="kpi-big" data-count="5" data-suffix="M+">0M+</div>
+        <span class="kpi-sublabel">at 24 months</span>
+        <div class="kpi-milestones">
+          <div class="kpi-mi"><span class="kpi-mi-t">6 mo</span><span class="kpi-mi-v">250K</span></div>
+          <div class="kpi-mi"><span class="kpi-mi-t">12 mo</span><span class="kpi-mi-v">1.5M</span></div>
+          <div class="kpi-mi final"><span class="kpi-mi-t">24 mo</span><span class="kpi-mi-v">5M+</span></div>
+        </div>
+        <div class="kpi-seg-wrap"><div class="kpi-seg-track"><div class="kpi-seg-fill"></div></div></div>
+      </div>
+      <div class="kpi-card" style="--kc:var(--blue2);--fw:88%">
+        <span class="kpi-ghost" aria-hidden="true">1M</span>
+        <span class="kpi-metric">YouTube Subscribers</span>
+        <div class="kpi-big" data-count="1" data-suffix="M+">0M+</div>
+        <span class="kpi-sublabel">at 24 months</span>
+        <div class="kpi-milestones">
+          <div class="kpi-mi"><span class="kpi-mi-t">6 mo</span><span class="kpi-mi-v">50K</span></div>
+          <div class="kpi-mi"><span class="kpi-mi-t">12 mo</span><span class="kpi-mi-v">300K</span></div>
+          <div class="kpi-mi final"><span class="kpi-mi-t">24 mo</span><span class="kpi-mi-v">1M+</span></div>
+        </div>
+        <div class="kpi-seg-wrap"><div class="kpi-seg-track"><div class="kpi-seg-fill"></div></div></div>
+      </div>
+      <div class="kpi-card" style="--kc:var(--amber);--fw:72%">
+        <span class="kpi-ghost" aria-hidden="true">100K</span>
+        <span class="kpi-metric">Email Subscribers</span>
+        <div class="kpi-big" data-count="100" data-suffix="K">0K</div>
+        <span class="kpi-sublabel">at 24 months</span>
+        <div class="kpi-milestones">
+          <div class="kpi-mi"><span class="kpi-mi-t">6 mo</span><span class="kpi-mi-v">5K</span></div>
+          <div class="kpi-mi"><span class="kpi-mi-t">12 mo</span><span class="kpi-mi-v">25K</span></div>
+          <div class="kpi-mi final"><span class="kpi-mi-t">24 mo</span><span class="kpi-mi-v">100K</span></div>
+        </div>
+        <div class="kpi-seg-wrap"><div class="kpi-seg-track"><div class="kpi-seg-fill"></div></div></div>
+      </div>
+      <div class="kpi-card" style="--kc:var(--blue);--fw:55%">
+        <span class="kpi-ghost" aria-hidden="true">25K</span>
+        <span class="kpi-metric">Discord Members</span>
+        <div class="kpi-big" data-count="25" data-suffix="K">0K</div>
+        <span class="kpi-sublabel">at 24 months</span>
+        <div class="kpi-milestones">
+          <div class="kpi-mi"><span class="kpi-mi-t">6 mo</span><span class="kpi-mi-v">1K</span></div>
+          <div class="kpi-mi"><span class="kpi-mi-t">12 mo</span><span class="kpi-mi-v">5K</span></div>
+          <div class="kpi-mi final"><span class="kpi-mi-t">24 mo</span><span class="kpi-mi-v">25K</span></div>
+        </div>
+        <div class="kpi-seg-wrap"><div class="kpi-seg-track"><div class="kpi-seg-fill"></div></div></div>
+      </div>
+      <div class="kpi-card" style="--kc:var(--gold);--fw:38%">
+        <span class="kpi-ghost" aria-hidden="true">5K</span>
+        <span class="kpi-metric">Paid Members</span>
+        <div class="kpi-big" data-count="5" data-suffix="K">0K</div>
+        <span class="kpi-sublabel">at 24 months</span>
+        <div class="kpi-milestones">
+          <div class="kpi-mi"><span class="kpi-mi-t">6 mo</span><span class="kpi-mi-v">—</span></div>
+          <div class="kpi-mi"><span class="kpi-mi-t">12 mo</span><span class="kpi-mi-v">500</span></div>
+          <div class="kpi-mi final"><span class="kpi-mi-t">24 mo</span><span class="kpi-mi-v">5K</span></div>
+        </div>
+        <div class="kpi-seg-wrap"><div class="kpi-seg-track"><div class="kpi-seg-fill"></div></div></div>
+      </div>
+    </div>
+    <div class="rpam-box r">
+      <div>
+        <span class="rpam-label">The North-Star Metric</span>
+        <h3>Revenue per Audience Member</h3>
+      </div>
+      <p>Total revenue ÷ total reachable audience. As RPAM grows, the social arm becomes more valuable per follower. As it stagnates, we know we're growing audience without value capture.</p>
+    </div>
+  </div>
+</section>
+
+<div class="sec-div"></div>
+
+<!-- ══════════════════════════════════════════════
+     SLIDE 14 — THE CLOSE
+══════════════════════════════════════════════ -->
+<section id="close">
+  <div class="close-glow"></div>
+  <div class="close-inner wrap">
+    <div class="sec-top r" style="text-align:center;max-width:800px;margin:0 auto">
+      <span class="eyebrow pur">The Close</span>
+      <h2 class="h1 close-h">
+        This isn't marketing.
+        <span class="close-cycle" id="closeCycle">
+          <span class="close-slide active">It's how we guarantee market success.</span>
+          <span class="close-slide">It's how we monetize for that audience.</span>
+          <span class="close-slide">It's the future for multi-channel monetization.</span>
+        </span>
+      </h2>
+    </div>
+    <p class="close-body r d1">
+      "League of Rock Inc. has the show. With it, we have a moment. Without the social media ecosystem, that moment ends when each season does. With it, the moment becomes a movement — and the movement becomes the company's backbone."
+    </p>
+    <div class="close-principles">
+      <div class="cp r" style="--cc:var(--pur2)">
+        <span class="cp-n" aria-hidden="true">01</span>
+        <span class="cp-step">01 — Moment</span>
+        <div class="cp-div"></div>
+        <h3>The show creates the moment. Social compounds it.</h3>
+        <p>Every episode drives top-of-funnel attention. The social ecosystem catches that attention and converts it into a long-term asset the company owns. The broadcast deal is one revenue line. The social ecosystem is twelve.</p>
+      </div>
+      <div class="cp r d1" style="--cc:var(--amber)">
+        <span class="cp-n" aria-hidden="true">02</span>
+        <span class="cp-step">02 — Revenue</span>
+        <div class="cp-div"></div>
+        <h3>Diversified revenue de-risks the company.</h3>
+        <p>The broadcast deal is one revenue line. The social ecosystem is twelve. Each line strengthens the others. If any single platform shifts policy, the business survives.</p>
+      </div>
+      <div class="cp r d2" style="--cc:var(--gold)">
+        <span class="cp-n" aria-hidden="true">03</span>
+        <span class="cp-step">03 — Data</span>
+        <div class="cp-div"></div>
+        <h3>The data we collect is the IP we keep.</h3>
+        <p>Audience data, engagement signals, demographic insights — these are the most valuable assets we'll generate, and they're how we win every future negotiation. The data doesn't go away when a season ends.</p>
+      </div>
+    </div>
+    <div class="r d3" style="text-align:center">
+      <span class="close-cta">LET'S BUILD THE FRAMEWORK.</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-brand">
+    <img src="LORLogo2.png" alt="LOR">
+    <span>League of Rock Inc. · Partner Briefing · 2026</span>
+  </div>
+  <div class="f-note">Confidential · chris@tiamediainc.com</div>
+</footer>
+
+<script>
+  // ── PROGRESS BAR ─────────────────────────────
+  window.addEventListener('scroll', () => {
+    document.getElementById('prog').style.width =
+      (window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100) + '%';
+  });
+
+  // ── PARTICLES ────────────────────────────────
+  (function() {
+    const c = document.getElementById('particles');
+    const colors = ['rgba(123,92,232,.5)','rgba(59,127,255,.4)','rgba(201,161,74,.4)','rgba(0,194,224,.3)'];
+    for (let i = 0; i < 50; i++) {
+      const d = document.createElement('div');
+      d.className = 'particle';
+      const sz = Math.random() * 5 + 1.5;
+      const x = Math.random() * 100, y = Math.random() * 100;
+      const dur = (Math.random() * 10 + 6).toFixed(1);
+      const del = (Math.random() * 6).toFixed(1);
+      const dx = (Math.random() * 60 - 30).toFixed(0);
+      const dy = (Math.random() * 60 - 30).toFixed(0);
+      const dx2 = (Math.random() * 60 - 30).toFixed(0);
+      const dy2 = (Math.random() * 60 - 30).toFixed(0);
+      d.style.cssText = `width:${sz}px;height:${sz}px;left:${x}%;top:${y}%;background:${colors[i%colors.length]};--dur:${dur}s;--del:-${del}s;--dx:${dx}px;--dy:${dy}px;--dx2:${dx2}px;--dy2:${dy2}px`;
+      c.appendChild(d);
+    }
+  })();
+
+  // ── COUNTER ANIMATION ────────────────────────
+  function countUp(el) {
+    const target = parseFloat(el.dataset.count);
+    const prefix = el.dataset.prefix || '';
+    const suffix = el.dataset.suffix || '';
+    const isFloat = !Number.isInteger(target);
+    const duration = 1800;
+    const start = performance.now();
+    function step(now) {
+      const p = Math.min((now - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - p, 3);
+      const val = ease * target;
+      el.textContent = prefix + (isFloat ? val.toFixed(1) : Math.floor(val).toLocaleString()) + suffix;
+      if (p < 1) requestAnimationFrame(step);
+      else el.textContent = prefix + (isFloat ? target.toFixed(1) : target.toLocaleString()) + suffix;
+    }
+    requestAnimationFrame(step);
+  }
+
+  // ── FUNNEL SEQUENCE ──────────────────────────
+  function animateFunnel() {
+    const vis = document.getElementById('funnelVis');
+    const cards = document.querySelectorAll('.f-card');
+    // Phase 1: pipeline bar draws + cards slide up
+    vis.classList.add('f-go');
+    cards.forEach((c, i) => setTimeout(() => c.classList.add('f-in'), i * 90));
+    // Phase 2: each card lights up sequentially
+    cards.forEach((c, i) => setTimeout(() => c.classList.add('lit'), 500 + i * 200));
+  }
+
+  // ── TABLE ROWS ───────────────────────────────
+  function animateTable() {
+    const rows = document.querySelectorAll('#kpiTable tr');
+    rows.forEach((r, i) => setTimeout(() => r.classList.add('rowvis'), i * 150));
+  }
+
+  // ── OBJECTIVE TABS ───────────────────────────
+  document.querySelectorAll('.obj-tab').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('.obj-tab').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.obj-panel').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+      document.getElementById(t.dataset.panel).classList.add('active');
+      // Re-trigger reveals in new panel
+      document.querySelectorAll('#' + t.dataset.panel + ' .r').forEach(el => {
+        el.classList.remove('vis');
+        setTimeout(() => el.classList.add('vis'), 50);
+      });
+    });
+  });
+
+  // ── INTERSECTION OBSERVER ────────────────────
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+
+      // Reveal classes
+      if (e.target.classList.contains('r') || e.target.classList.contains('rx')) {
+        e.target.classList.add('vis');
+      }
+
+      // Counter elements
+      e.target.querySelectorAll('.stat-num[data-count], .mult-hero-stat[data-count], .merch-num[data-count], .kpi-big[data-count]').forEach(el => {
+        if (!el.dataset.counted) { el.dataset.counted = '1'; countUp(el); }
+      });
+
+      // Revenue bar chart — staggered row reveal
+      if (e.target.id === 'revChart' || e.target.closest('#monetization')) {
+        const chart = document.getElementById('revChart');
+        if (chart && !chart.dataset.animated) {
+          chart.dataset.animated = '1';
+          const rows = chart.querySelectorAll('.rev-bar-row');
+          rows.forEach((row, i) => {
+            setTimeout(() => {
+              row.classList.add('rvis');
+              const fill = row.querySelector('.rev-bar-fill');
+              if (fill && fill.dataset.w) {
+                setTimeout(() => { fill.style.width = fill.dataset.w + '%'; }, 120);
+              }
+            }, i * 110);
+          });
+        }
+      }
+
+      // Funnel
+      if (e.target.id === 'funnelVis' || e.target.closest('#funnel')) {
+        if (!document.getElementById('funnelVis').dataset.animated) {
+          document.getElementById('funnelVis').dataset.animated = '1';
+          animateFunnel();
+        }
+      }
+
+      // KPI grid
+      if (e.target.closest('#kpis')) {
+        const grid = document.getElementById('kpiGrid');
+        if (grid && !grid.dataset.animated) {
+          grid.dataset.animated = '1';
+          grid.classList.add('kg-go');
+          document.querySelectorAll('.kpi-card').forEach((c, i) =>
+            setTimeout(() => {
+              c.classList.add('kvis');
+              c.querySelectorAll('.kpi-big[data-count]').forEach(el => {
+                if (!el.dataset.counted) { el.dataset.counted = '1'; setTimeout(() => countUp(el), 300); }
+              });
+            }, i * 120)
+          );
+        }
+      }
+
+      io.unobserve(e.target);
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.r, .rx, section, #funnelVis, #kpiTable, #revChart, #kpiGrid').forEach(el => io.observe(el));
+
+  // ── CLOSE SECTION CYCLING TEXT ───────────────
+  (function() {
+    const slides = document.querySelectorAll('#closeCycle .close-slide');
+    let current = 0;
+    function next() {
+      const prev = current;
+      current = (current + 1) % slides.length;
+      slides[prev].classList.remove('active');
+      slides[prev].classList.add('exit');
+      slides[current].classList.add('active');
+      setTimeout(() => slides[prev].classList.remove('exit'), 1200);
+    }
+    setInterval(next, 3300);
+  })();
+</script>
+</body>
+</html>
